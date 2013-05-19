@@ -7,16 +7,23 @@ package com.eli.index.controller;
  * Time: 下午2:00
  * To change this template use File | Settings | File Templates.
  */
-public class Discussion {
+public class Discussion implements Comparable{
     public int id;
     public int topicId;
-    public String  author;
+    public String  title;
     public String content;
+    public String date;
 
-    public Discussion(int id, int topicId, String author, String content) {
+    public Discussion(int id, int topicId, String author, String content, String date) {
         this.id = id;
         this.topicId = topicId;
-        this.author = author;
+        this.title = title;
         this.content = content;
+        this.date = date;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+       return this.date.compareTo(((Discussion)o).date);
     }
 }

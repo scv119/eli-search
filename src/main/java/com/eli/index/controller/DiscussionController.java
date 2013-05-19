@@ -3,8 +3,10 @@ package com.eli.index.controller;
 import com.eli.index.document.DiscussionDoc;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,17 +20,27 @@ public class DiscussionController {
     private DiscussionDao discussionDao;
 
     public DiscussionController() {
-        this.discussionDao = new FileDiscussionDao();
+        try {
+            this.discussionDao = new FileDiscussionDao();
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
 
-    public List<DiscussionDoc> getNextDiscussionDocs() {
+    public Set<Integer> getTopicIds() {
+        return this.discussionDao.getTopicIds();
+    }
+
+    public List<DiscussionDoc> geDiscussionDocs(int topicId) {
         List<DiscussionDoc> ret = new ArrayList<DiscussionDoc>();
-        List<Discussion> ids = this.discussionDao.getNextDiscussion();
+        List<Discussion> ids = this.discussionDao.getDiscussion(topicId);
         for (int i = 0; i * 20 < ids.size(); i ++ ) {
             for (int j = 0; j < 20 && i * 20 + j < ids.size(); j ++) {
                 DiscussionDoc doc = new DiscussionDoc();
                 Discussion dis= ids.get(i * 20 + j);
                 doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ap=" + i;
+                if (dis.title != null)
+                    doc.title = dis.title;
                 doc.content = dis.content;
                 ret.add(doc);
             }

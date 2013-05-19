@@ -9,9 +9,9 @@
 result ids:
 <br>
 <#list ret as item>
-    ${item.get("title")} <br>
-    ${item.get("content")}<br>
-     ${item.get("url")}
+    ${item["title"]} <br>
+    ${item["content"]}<br>
+     ${item["url"]}
 </#list>
 <br>
 

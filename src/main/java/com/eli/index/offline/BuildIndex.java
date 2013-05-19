@@ -51,12 +51,14 @@ public class BuildIndex {
         DiscussionController controller = new DiscussionController();
         int start_idx = 0;
         int count = 0;
-        while (true) {
-                List<? extends DocumentSupport>  list=  controller.getNextDiscussionDocs();
-                if (list == null)
-                    break;
-                for (DocumentSupport doc :list)
-                    ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
+        Set<Integer> topicIds = controller.getTopicIds();
+        for (int topicId : topicIds) {
+            List<? extends DocumentSupport>  list=  controller.geDiscussionDocs(topicId);
+            if (count ++ % 100 == 0)
+                logger.info(count + " topics indexed");
+            for (DocumentSupport doc :list)
+                ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
+
         }
 
         logger.info("indexed discussion:" + start_idx);

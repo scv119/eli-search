@@ -34,6 +34,7 @@ public class AnalyzerFactory {
             switch (type) {
                 case NGRAM:
                     ret = getInstance(CJKAnalyzer.class, Version.LUCENE_36);
+                    break;
                 default:
                     ret = getInstance(StandardAnalyzer.class, Version.LUCENE_36);
             }

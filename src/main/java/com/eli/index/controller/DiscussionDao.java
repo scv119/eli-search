@@ -3,6 +3,7 @@ package com.eli.index.controller;
 import com.eli.index.document.DiscussionDoc;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,5 +13,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface DiscussionDao {
-    public List<Discussion> getNextDiscussion();
+    public Set<Integer> getTopicIds();
+    public List<Discussion> getDiscussion(int id);
 }

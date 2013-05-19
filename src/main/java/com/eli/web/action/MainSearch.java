@@ -8,6 +8,7 @@ import com.eli.web.BasicAction;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
@@ -56,7 +57,9 @@ public class MainSearch extends BasicAction {
                 Document doc = searcher.doc(docId);
                 String content =  doc.get("content.NGRAM");
                 String title =  doc.get("title.NGRAM");
-                String url     =  doc.get("url.NONE");
+                if (title == null)
+                    title = "";
+                String url     =  doc.get("url.None");
                 Map<String,String> map = new HashMap<String, String>();
                 map.put("content", content);
                 map.put("title", title);
