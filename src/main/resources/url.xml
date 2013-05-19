@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+
+    <action>
+        <url>/q</url>
+        <class>com.eli.web.action.MainSearch</class>
+        <param>result.ftl</param>
+        <type>ftl</type>
+    </action>
+
+    <action>
+        <url>/admin</url>
+        <class>com.eli.web.action.AdminAction</class>
+        <param>admin.ftl</param>
+        <type>ftl</type>
+    </action>
+</actions>

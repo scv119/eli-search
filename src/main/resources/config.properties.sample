@@ -1,0 +1,16 @@
+db_host=localhost
+db_database=zhihu
+db_user=root
+db_pass=123456
+
+
+max_idle_count=10
+max_active_count=10
+
+idx_path=tmp
+
+listen_port=8080
+
+
+thread_num=50
+mem_limit =50000000
