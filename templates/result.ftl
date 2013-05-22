@@ -54,6 +54,8 @@
 <button type="submit" class="btn" >搜索</button>
 </form>
 </div>
+
+<#if (total > 0)>
 <div class="pg">
 <#if (offset >= 20)>
 <a href="./q?q=${query}&offset=${offset-20}">上一页</a>
@@ -67,6 +69,9 @@ ${offset/20+1}/${page}
 下一页
 </#if>
 </div>
+</#if>
+
+
 <div>
 <#list ret as item>
 
@@ -78,6 +83,7 @@ ${offset/20+1}/${page}
 </#list>
 </div>
 
+<#if (total > 0)>
 <div class="pg">
 <#if (offset >= 20)>
 <a href="./q?q=${query}&offset=${offset-20}">上一页</a>
@@ -91,7 +97,7 @@ ${offset/20+1}/${page}
 下一页
 </#if>
 </div>
-
+</#if>
 
 </br>
 </body>
