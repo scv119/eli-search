@@ -13,7 +13,7 @@ import java.util.*;
 public class FileDiscussionDao implements DiscussionDao {
     private  Map<Integer, List<Discussion>> map = new HashMap<Integer, List<Discussion>>();
     public FileDiscussionDao() throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("E:12.txt"), "GBK"));
+        BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("/Users/shenchen/Downloads/12.txt"), "GBK"));
         List<String> tokens = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
         int cnt = 0;

@@ -25,6 +25,7 @@ public class Config {
 
     public static boolean                   DEBUG = configLoader.getBoolean("debug", true);
     public static final File                INDEX_DIR = new File(configLoader.get("idx_path","index"));
+    public static final String              FILE_PATH = configLoader.get("file_path","./test.file");
     public static final int                 PORT = configLoader.getInteger("listen_port",8080);
     public static final int                 MAX_IDLE_COUNT = configLoader.getInteger("max_idle_count",5);
     public static final int                 MAX_ACTIVE_COUNT = configLoader.getInteger("max_active_count",10);

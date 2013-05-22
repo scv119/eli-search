@@ -7,11 +7,13 @@ import com.eli.index.manager.ZhihuIndexManager;
 import com.eli.web.BasicAction;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
+import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.util.Version;
 
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class MainSearch extends BasicAction {
         List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
         MultiNRTSearcherAgent agent = ZhihuIndexManager.INSTANCE.acquire();
         try{
-            Searcher searcher = agent.getSearcher();
+            IndexSearcher searcher = agent.getSearcher();
             Query sub = qp.parse(token);
             Query sub1 = qp1.parse(token);
 
@@ -49,8 +51,13 @@ public class MainSearch extends BasicAction {
             query.add(sub1, BooleanClause.Occur.SHOULD);
 
             TopDocs hits = searcher.search(query, offset + limit);
+            QueryScorer scorer = new QueryScorer(query);
+            Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"hi\">", "</span>"), new SimpleHTMLEncoder(), scorer);
+            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer));
+
             super.put("total", hits.totalHits);
 
+            super.put("page",((hits.totalHits+19)/20)+1);
 
             for (int i = offset; i < hits.scoreDocs.length && i < offset + limit; i++) {
                 int docId = hits.scoreDocs[i].doc;
@@ -59,6 +66,14 @@ public class MainSearch extends BasicAction {
                 String title =  doc.get("title.NGRAM");
                 if (title == null)
                     title = "";
+                TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
+                content = highlighter.getBestFragment(stream, content);
+                stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "title.NGRAM", doc, analyzer );
+                title = highlighter.getBestFragment(stream, title);
+                if (title == null)
+                    title = "无标题";
+                if  (content == null)
+                    content = "无内容";
                 String url     =  doc.get("url.None");
                 Map<String,String> map = new HashMap<String, String>();
                 map.put("content", content);
@@ -72,6 +87,7 @@ public class MainSearch extends BasicAction {
             ZhihuIndexManager.INSTANCE.release(agent);
         }
         super.put("ret", ret);
+
     }
 
 }
