@@ -28,7 +28,7 @@ public class MainSearch extends BasicAction {
 
     @Override
     protected void execute() throws IOException {
-        String token = super.getParam("q", "?");
+        String token = super.getParam("q", "");
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
         int limit  = Integer.parseInt(super.getParam("limit", "20"));
 
