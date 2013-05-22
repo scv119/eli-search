@@ -28,7 +28,7 @@ public class MainSearch extends BasicAction {
 
     @Override
     protected void execute() throws IOException {
-        String token = super.getParam("q", "");
+        String token = super.getParam("q", "?");
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
         int limit  = Integer.parseInt(super.getParam("limit", "20"));
 
@@ -36,6 +36,7 @@ public class MainSearch extends BasicAction {
         super.put("offset", offset);
         super.put("limit", limit);
         super.put("total", 0);
+        super.put("page", 0);
 
         QueryParser qp = new QueryParser(Version.LUCENE_36, "content.NGRAM", analyzer);
         QueryParser qp1 = new QueryParser(Version.LUCENE_36, "title.NGRAM", analyzer);
