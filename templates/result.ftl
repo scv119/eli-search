@@ -5,46 +5,84 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf8">
     <title>Search Result</title>
     <style>
+	   #center {
+            margin-left: 120px;
+            margin-right:254px;
+            width:528px;
+            padding-left: 8px;
+            padding-right: 8px;
+            font-family: Arial, sans-serif;
+        }
+
         .hi {
-            color: #c20a0a;
+            font-weight: bold;
         }
 
         .search {
             color: rgb(51, 51, 51);
+            margin-left: 120px;
+            margin-right:254px;
             display: block;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 33px;
-            height: 66px;
+            font-size: 13px;
+            height: 50px;
             line-height: 18px;
-            width: 940px;
+            width: 500px;
         }
 
         .box {
             width:80%;
-            font-size: 23px;
+            font-size: 16px;
         }
 
         .btn {
             width:10%;
-            font-size: 23px;
+            font-size: 16px;
          }
 
+        .item {
+            font-size: 16px;
+            color: rgb(17, 85, 204);
+            font-size: 16px;
+            height: 70px;
+            margin-bottom:23px;
+            line-height: 19px;
+        }
+
         .title {
-            font-size: 17px;
-            border: 2px;
-            margin: 5px;
+            font-size: 16px;
+            color: rgb(17, 85, 204);
+            font-size: 16px;
+            line-height: 19px;
+            border: 0px;
+            margin: 0px;
         }
 
         .url {
-            font-size: 12px;
+            font-size: 14px;
+            color: rgb(0, 153, 51);
+            height: auto;
+            line-height:16px;
+            padding-bottom: 2px;
             border: 0px;
             margin: 0px;
         }
 
         .content {
-            font-size: 16px;
+            color: rgb(68,68,68);
+            font-size: 13px;
+            height: auto;
+            line-height:16px;
             border: 0px;
             margin: 0px;
+        }
+
+        .pg {
+            font-family: arial, sans-serif;
+            height: 35px;
+            font-size: 13px;
+            width: 308px;
+            margin-left: 110px;
+            margin-right: 110px;
         }
     </style>
 </head>
@@ -55,33 +93,15 @@
 </form>
 </div>
 
-<#if (total > 0)>
-<div class="pg">
-<#if (offset >= 20)>
-<a href="./q?q=${query}&offset=${offset-20}">上一页</a>
-<#else>
-上一页
-</#if>
-${offset/20+1}/${page}
-<#if (offset + 20 <= total)>
-<a href="./q?q=${query}&offset=${offset+20}">下一页</a>
-<#else>
-下一页
-</#if>
-</div>
-</#if>
 
-
-<div>
+<div id="center">
 <#list ret as item>
-
-
-    <li class="title"><a href="${item["url"]}">${item["title"]}</a>
-        <ul class="url"><a href="${item["url"]}">${item["url"]}</a></ul>
-        <ul class="content">${item["content"]}</ul>
-    </li>
+    <div class="item">
+    <div class="title"><a href="${item["url"]}">${item["title"]}</a></div>
+    <div class="url">${item["url"]}</div>
+    <div class="content">${item["content"]}</div>
+   </div>
 </#list>
-</div>
 
 <#if (total > 0)>
 <div class="pg">
@@ -98,6 +118,8 @@ ${offset/20+1}/${page}
 </#if>
 </div>
 </#if>
+
+</div>
 
 </br>
 </body>

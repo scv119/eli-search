@@ -30,7 +30,7 @@ public class MainSearch extends BasicAction {
     protected void execute() throws IOException {
         String token = super.getParam("q", "");
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
-        int limit  = Integer.parseInt(super.getParam("limit", "20"));
+        int limit  = Integer.parseInt(super.getParam("limit", "10"));
 
         super.put("query", token);
         super.put("offset", offset);
@@ -58,7 +58,7 @@ public class MainSearch extends BasicAction {
 
             super.put("total", hits.totalHits);
 
-            super.put("page",((hits.totalHits+19)/20)+1);
+            super.put("page",((hits.totalHits+9)/10)+1);
 
             for (int i = offset; i < hits.scoreDocs.length && i < offset + limit; i++) {
                 int docId = hits.scoreDocs[i].doc;
