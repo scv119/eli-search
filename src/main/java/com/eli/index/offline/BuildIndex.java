@@ -2,6 +2,8 @@ package com.eli.index.offline;
 
 import com.eli.index.DocumentSupport;
 import com.eli.index.controller.DiscussionController;
+import com.eli.index.controller.TopicController;
+import com.eli.index.document.TopicDoc;
 import com.eli.index.manager.ZhihuIndexManager;
 import com.eli.util.Config;
 import org.apache.log4j.Logger;
@@ -31,6 +33,7 @@ public class BuildIndex {
                 return false;
 
             indexDiscussion();
+            indexTopic();
 
             ZhihuIndexManager.INSTANCE.batchDone();
 
@@ -58,6 +61,21 @@ public class BuildIndex {
             for (DocumentSupport doc :list)
                 ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
 
+        }
+
+        logger.info("indexed discussion:" + start_idx);
+
+    }
+
+    public static void indexTopic()  throws CorruptIndexException, IOException {
+        TopicController controller = new TopicController();
+        int start_idx = 0;
+        int count = 0;
+        List<TopicDoc> lists = controller.getTopics();
+        for (TopicDoc doc : lists)  {
+            if (count ++ % 100 == 0)
+                logger.info(count + " topics indexed");
+                ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
         }
 
         logger.info("indexed discussion:" + start_idx);
