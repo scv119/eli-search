@@ -31,13 +31,15 @@ public class DiscussionController {
         return this.discussionDao.getTopicIds();
     }
 
-    public List<DiscussionDoc> geDiscussionDocs(int topicId) {
+    public List<DiscussionDoc> getDiscussionDocs(int topicId) {
         List<DiscussionDoc> ret = new ArrayList<DiscussionDoc>();
         List<Discussion> ids = this.discussionDao.getDiscussion(topicId);
         for (int i = 0; i * 20 < ids.size(); i ++ ) {
             for (int j = 0; j < 20 && i * 20 + j < ids.size(); j ++) {
                 DiscussionDoc doc = new DiscussionDoc();
                 Discussion dis= ids.get(i * 20 + j);
+                if (j == 0)
+                    doc.setBoost(1.5f);
                 doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ap=" + i;
                 if (dis.title != null)
                     doc.title = dis.title;

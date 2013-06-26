@@ -65,6 +65,7 @@ public class MainSearch extends BasicAction {
                 Document doc = searcher.doc(docId);
                 String content =  doc.get("content.NGRAM");
                 String title =  doc.get("title.NGRAM");
+                String type  = doc.get("type.NONE");
                 if (title == null)
                     title = "";
                 TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
@@ -75,6 +76,9 @@ public class MainSearch extends BasicAction {
                     title = "无标题";
                 if  (content == null)
                     content = "无内容";
+
+                if (type.equals("topic"))
+                    title = "板块:";
                 String url     =  doc.get("url.None");
                 Map<String,String> map = new HashMap<String, String>();
                 map.put("content", content);
