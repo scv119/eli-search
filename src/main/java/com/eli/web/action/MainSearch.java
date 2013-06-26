@@ -77,7 +77,7 @@ public class MainSearch extends BasicAction {
                 if  (content == null)
                     content = "无内容";
 
-                if (type.equals("topic"))
+                if (type != null && type.equals("topic"))
                     title = "板块:";
                 String url     =  doc.get("url.None");
                 Map<String,String> map = new HashMap<String, String>();
