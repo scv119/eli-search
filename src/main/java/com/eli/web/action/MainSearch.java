@@ -54,7 +54,7 @@ public class MainSearch extends BasicAction {
             TopDocs hits = searcher.search(query, offset + limit);
             QueryScorer scorer = new QueryScorer(query);
             Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"hi\">", "</span>"), new SimpleHTMLEncoder(), scorer);
-            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer));
+            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 60));
 
             super.put("total", hits.totalHits);
 
