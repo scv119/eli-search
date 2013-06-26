@@ -2,7 +2,6 @@ package com.eli.index.offline;
 
 import com.eli.index.DocumentSupport;
 import com.eli.index.controller.DiscussionController;
-import com.eli.index.document.DiscussionDoc;
 import com.eli.index.manager.ZhihuIndexManager;
 import com.eli.util.Config;
 import org.apache.log4j.Logger;
@@ -53,7 +52,7 @@ public class BuildIndex {
         int count = 0;
         Set<Integer> topicIds = controller.getTopicIds();
         for (int topicId : topicIds) {
-            List<? extends DocumentSupport>  list=  controller.geDiscussionDocs(topicId);
+            List<? extends DocumentSupport>  list=  controller.getDiscussionDocs(topicId);
             if (count ++ % 100 == 0)
                 logger.info(count + " topics indexed");
             for (DocumentSupport doc :list)

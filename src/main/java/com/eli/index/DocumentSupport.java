@@ -25,6 +25,7 @@ import java.util.Map;
  */
 public class DocumentSupport {
     private static final Logger logger = Logger.getLogger(DocumentSupport.class);
+    private float boost = 1.0f;
     private static Map<String, Class<? extends DocumentSupport>> childMap =
             new HashMap<String,  Class<? extends DocumentSupport>>();
 
@@ -69,7 +70,8 @@ public class DocumentSupport {
         Class clazz = obj.getClass();
         Field[] fields = clazz.getFields();
         for(Field field:fields){
-            if( Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) )
+            if( Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())
+                    || Modifier.isPrivate(field.getModifiers()) )
                 continue;
 
             IField annotation = field.getAnnotation(IField.class);
@@ -107,7 +109,11 @@ public class DocumentSupport {
 
         Class clazz = obj.getClass();
         Field[] fields = clazz.getDeclaredFields();
+
+        float boost = ((DocumentSupport)(obj)).boost;
         for(Field field:fields){
+            if (Modifier.isPrivate(field.getModifiers()))
+                continue;
             IField annotation = field.getAnnotation(IField.class);
             for(IndexType type:annotation.indexTypes()){
                 String indexFieldName = field.getName()+"."+type.name();
@@ -117,10 +123,10 @@ public class DocumentSupport {
                         List lData = (List)data;
 
                         for(Object item:lData)
-                            ret.add(buildField(type, indexFieldName, item, 1.0f));
+                            ret.add(buildField(type, indexFieldName, item, boost));
                     }
                     else
-                        ret.add(buildField(type, indexFieldName, data, 1.0f));
+                        ret.add(buildField(type, indexFieldName, data, boost));
                 }catch(Exception e){
                     logger.error("failed to access field "+ field.getName(), e);
                 }
@@ -149,5 +155,11 @@ public class DocumentSupport {
         return ret;
     }
 
+    public float getBoost() {
+        return boost;
+    }
 
+    public void setBoost(float boost) {
+        this.boost = boost;
+    }
 }
