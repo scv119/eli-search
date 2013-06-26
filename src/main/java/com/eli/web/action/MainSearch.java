@@ -65,7 +65,7 @@ public class MainSearch extends BasicAction {
                 Document doc = searcher.doc(docId);
                 String content =  doc.get("content.NGRAM");
                 String title =  doc.get("title.NGRAM");
-                String type  = doc.get("type.NONE");
+                String type  = doc.get("type.None");
                 if (title == null)
                     title = "";
                 TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );

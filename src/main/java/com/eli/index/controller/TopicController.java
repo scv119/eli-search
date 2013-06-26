@@ -67,7 +67,6 @@ public class TopicController {
             doc.setTitle(CONTENT[idx++]);
             doc.setContent(CONTENT[idx++]);
             doc.setUrl(CONTENT[idx++]);
-            doc.setBoost(1.5f);
             ret.add(doc);
         }
         return ret;
