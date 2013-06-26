@@ -19,4 +19,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IField {
     IndexType[] indexTypes() default {IndexType.None};
+    float boost() default 1.0f;
 }

@@ -43,7 +43,7 @@ public class TopicDoc extends DocumentSupport {
     @IField(indexTypes = {IndexType.None})
     public String url;
 
-    @IField(indexTypes = {IndexType.NGRAM})
+    @IField(indexTypes = {IndexType.NGRAM}, boost = 5f)
     public String title = "";
 
     public String getContent() {

@@ -39,7 +39,7 @@ public class DiscussionController {
                 DiscussionDoc doc = new DiscussionDoc();
                 Discussion dis= ids.get(i * 20 + j);
                 if (j == 0)
-                    doc.setBoost(1.5f);
+                    doc.setBoost(1.2f);
                 doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ap=" + i;
                 if (dis.title != null)
                     doc.title = dis.title;

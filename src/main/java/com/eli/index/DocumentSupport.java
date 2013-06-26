@@ -123,10 +123,10 @@ public class DocumentSupport {
                         List lData = (List)data;
 
                         for(Object item:lData)
-                            ret.add(buildField(type, indexFieldName, item, boost));
+                            ret.add(buildField(type, indexFieldName, item, boost * annotation.boost()));
                     }
                     else
-                        ret.add(buildField(type, indexFieldName, data, boost));
+                        ret.add(buildField(type, indexFieldName, data, boost * annotation.boost()));
                 }catch(Exception e){
                     logger.error("failed to access field "+ field.getName(), e);
                 }
