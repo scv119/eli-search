@@ -11,6 +11,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
@@ -46,10 +47,12 @@ public class MainSearch extends BasicAction {
             IndexSearcher searcher = agent.getSearcher();
             Query sub = qp.parse(token);
             Query sub1 = qp1.parse(token);
+            Query sub2 = new TermQuery(new Term("name.None", token));
 
             BooleanQuery query = new BooleanQuery();
             query.add(sub, BooleanClause.Occur.SHOULD);
             query.add(sub1, BooleanClause.Occur.SHOULD);
+            query.add(sub2, BooleanClause.Occur.SHOULD);
 
             TopDocs hits = searcher.search(query, offset + limit);
             QueryScorer scorer = new QueryScorer(query);
@@ -66,27 +69,39 @@ public class MainSearch extends BasicAction {
                 String content =  doc.get("content.NGRAM");
                 String title =  doc.get("title.NGRAM");
                 String type  = doc.get("type.None");
-                if (title == null)
-                    title = "";
-                TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
-                String hContent = highlighter.getBestFragment(stream, content);
-                stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "title.NGRAM", doc, analyzer );
-                String hTitle = highlighter.getBestFragment(stream, title);
-                if (hTitle == null && title.length() == 0)
-                    hTitle = "无标题";
-                else
-                    hTitle = title;
-                if  (hContent == null && (content == null || content.length() == 0))
-                    hContent = "无内容";
-                else
-                    hContent = content.substring(0, Math.min(60, content.length()));
 
-                if (type.equals("topic"))
-                    hTitle = "板块:" + hTitle;
+                if (type.equals("member")) {
+                    content = "用户";
+                    title   = doc.get("name.None");
+                } else {
+                    if (title == null)
+                        title = "";
+                    if  (content == null)
+                        content = "";
+                    TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
+                    String hContent = highlighter.getBestFragment(stream, content);
+                    stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "title.NGRAM", doc, analyzer );
+                    String hTitle = highlighter.getBestFragment(stream, title);
+                    if (hTitle == null && title.length() == 0)
+                        hTitle = "无标题";
+                    else
+                        hTitle = title;
+                    if  (hContent == null && (content == null || content.length() == 0))
+                        hContent = "无内容";
+                    else
+                        hContent = content.substring(0, Math.min(60, content.length()));
+
+                    if (type.equals("topic"))
+                        hTitle = "板块:" + hTitle;
+
+                    content = hContent;
+                    title   = hTitle;
+
+                }
                 String url     =  doc.get("url.None");
                 Map<String,String> map = new HashMap<String, String>();
-                map.put("content", hContent);
-                map.put("title", hTitle);
+                map.put("content", content);
+                map.put("title", title);
                 map.put("url", url);
                 ret.add(map);
             }
