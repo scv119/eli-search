@@ -76,6 +76,14 @@
             margin: 0px;
         }
 
+
+           .avatar {
+                height: 60px;
+                width:  60px;
+                padding-right: 10px;
+                float: left;
+            }
+
         .pg {
             font-family: arial, sans-serif;
             height: 35px;
@@ -97,9 +105,12 @@
 <div id="center">
 <#list ret as item>
     <div class="item">
-    <div class="title"><a href="${item["url"]}">${item["title"]}</a></div>
+    <#if item["avatar"]??>
+     <img class="avatar" src="${item["avatar"]}"/>
+    </#if>
+    <div class="title"><a href="${item["url"]}">${item["title"]?html}</a></div>
     <div class="url">${item["url"]}</div>
-    <div class="content">${item["content"]}</div>
+    <div class="content">${item["content"]?html}</div>
    </div>
 </#list>
 
@@ -110,7 +121,7 @@
 <#else>
 上一页
 </#if>
-${offset/20+1}/${page}
+${offset/20+1}/${(total+19)/20}
 <#if (offset + 20 <= total)>
 <a href="./q?q=${query}&offset=${offset+20}">下一页</a>
 <#else>

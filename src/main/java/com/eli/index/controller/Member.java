@@ -11,6 +11,7 @@ public class Member {
     private int id;
     private String name;
     private String aliasName;
+    private String avatar = "";
 
     public int getId() {
         return id;
@@ -34,5 +35,13 @@ public class Member {
 
     public void setAliasName(String aliasName) {
         this.aliasName = aliasName;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

@@ -22,13 +22,15 @@ public class FileMemberDao implements MemberDao {
         List<Member> ret = new ArrayList<Member>();
         BufferedReader br = null;
         try {
-           br=new BufferedReader(new InputStreamReader(new FileInputStream(Config.DISCUSS_PATH), "GBK"));
+           br=new BufferedReader(new InputStreamReader(new FileInputStream(Config.MEMBER_PATH), "GBK"));
             String line;
             while ((line = br.readLine()) != null) {
                 String tokens[] = line.split("\t");
                 Member member = new Member();
                 member.setId(Integer.parseInt(tokens[0]));
                 member.setName(tokens[1]);
+                if (tokens.length >= 3)
+                    member.setAvatar(tokens[2]);
                 ret.add(member);
             }
         } catch(IOException e) {

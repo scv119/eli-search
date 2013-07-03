@@ -30,6 +30,7 @@ public class MainSearch extends BasicAction {
     @Override
     protected void execute() throws IOException {
         String token = super.getParam("q", "");
+        String avatar_url = null;
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
         int limit  = Integer.parseInt(super.getParam("limit", "10"));
 
@@ -61,7 +62,6 @@ public class MainSearch extends BasicAction {
 
             super.put("total", hits.totalHits);
 
-            super.put("page",((hits.totalHits+9)/10)+1);
 
             for (int i = offset; i < hits.scoreDocs.length && i < offset + limit; i++) {
                 int docId = hits.scoreDocs[i].doc;
@@ -71,8 +71,11 @@ public class MainSearch extends BasicAction {
                 String type  = doc.get("type.None");
 
                 if (type.equals("member")) {
-                    content = "用户";
+                    content = "以琳用户";
                     title   = doc.get("name.None");
+                    avatar_url = doc.get("avatar.None");
+                    if (avatar_url == null || avatar_url.length() == 0)
+                        avatar_url =  "http://new.elimautism.org/images/face/0003.gif";
                 } else {
                     if (title == null)
                         title = "";
@@ -85,17 +88,18 @@ public class MainSearch extends BasicAction {
                     if (hTitle == null && title.length() == 0)
                         hTitle = "无标题";
                     else
-                        hTitle = title;
+                        hTitle = title.substring(0, Math.min(25, title.length()));
                     if  (hContent == null && (content == null || content.length() == 0))
                         hContent = "无内容";
                     else
-                        hContent = content.substring(0, Math.min(60, content.length()));
+                        hContent = content.substring(0, Math.min(80, content.length()));
 
                     if (type.equals("topic"))
-                        hTitle = "板块:" + hTitle;
+                        hTitle = "论坛板块:" + hTitle;
 
                     content = hContent;
                     title   = hTitle;
+                    avatar_url = null;
 
                 }
                 String url     =  doc.get("url.None");
@@ -103,6 +107,8 @@ public class MainSearch extends BasicAction {
                 map.put("content", content);
                 map.put("title", title);
                 map.put("url", url);
+                if (avatar_url != null)
+                    map.put("avatar", avatar_url);
                 ret.add(map);
             }
         } catch (Exception e) {
