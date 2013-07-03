@@ -121,7 +121,7 @@
 <#else>
 上一页
 </#if>
-${offset/20+1}/${(total+19)/20}
+${offset/20+1}/${((total+19)/20)?int}
 <#if (offset + 20 <= total)>
 <a href="./q?q=${query}&offset=${offset+20}">下一页</a>
 <#else>
