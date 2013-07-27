@@ -43,6 +43,10 @@ public class DiscussionController {
                     doc.setBoost(1.2f);
                 else
                     continue;
+
+                if (dis.boardId == 78 || dis.boardId == 50 || dis.boardId == 444)
+                    continue;
+
                 if (dis.title != null)
                     doc.title = dis.title;
                 doc.content = dis.content;

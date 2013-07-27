@@ -14,8 +14,10 @@ public class Discussion implements Comparable{
     public String  title;
     public String content;
     public String date;
+    public int boardId;
 
-    public Discussion(int id, int topicId, int topicSort, String title, String content, String date) {
+    public Discussion(int id, int topicId, int topicSort, int boardId, String title, String content, String date) {
+        this.boardId = boardId;
         this.id = id;
         this.topicId = topicId;
         this.title = title;
