@@ -5,6 +5,7 @@ package com.eli.web.action;
 import com.eli.index.manager.MultiNRTSearcherAgent;
 import com.eli.index.manager.ZhihuIndexManager;
 import com.eli.web.BasicAction;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -96,23 +97,18 @@ public class MainSearch extends BasicAction {
                     if  (content == null)
                         content = "";
 
-                    String highLight = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", doc.get("content.NGRAM")
-                                ,3, 30);
-                    logger.info(highLight);
-                    highLight = getFragmentsWithHighlightedTerms(analyzer, query, "title.NGRAM", doc.get("content.NGRAM"), 3, 30);
-                    logger.info(highLight);
+                    String hContent = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", content,10, 70);
+                    String hTitle  = getFragmentsWithHighlightedTerms(analyzer, query, "title.NGRAM", title, 10, 200);
+                    logger.info(hTitle);
+                    logger.info(hContent);
 
-                    TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
-                    String hContent = highlighter.getBestFragment(stream, content);
-                    stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "title.NGRAM", doc, analyzer );
-                    String hTitle = highlighter.getBestFragment(stream, title);
                     if (hTitle == null && title.length() == 0)
                         hTitle = "无标题";
-                    else
+                    else if(hTitle == null)
                         hTitle = title.substring(0, Math.min(25, title.length()));
                     if  (hContent == null && (content == null || content.length() == 0))
                         hContent = "无内容";
-                    else
+                    else if(hContent == null)
                         hContent = content.substring(0, Math.min(80, content.length()));
 
                     if (type.equals("topic"))
@@ -144,12 +140,14 @@ public class MainSearch extends BasicAction {
     public static String getFragmentsWithHighlightedTerms(Analyzer analyzer, Query query,
                                                      String fieldName, String fieldContents, int fragmentNumber, int fragmentSize) throws IOException, InvalidTokenOffsetsException {
 
+        fieldContents = StringUtils.replaceEach(fieldContents, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
+    
         TokenStream stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer, fragmentSize);
 
 //        Highlighter highlighter = new Highlighter(scorer);
-        Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), new SimpleHTMLEncoder(), scorer);
+        Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), scorer);
         highlighter.setTextFragmenter(fragmenter);
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
 

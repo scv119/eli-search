@@ -78,7 +78,7 @@ a:focus{
 .item .search-red{color:#ff6633;}
 .item a.link-green{color:#33cc00;font-size: 13px}
 .user-type{color:rgb(111, 111, 111);font-size: 13px}
-.search-art{width:34%;height:34px;font-size: 14px;color:#535353;overflow: hidden;}
+.search-art{width:34%;height:45px;font-size: 13px;color:#535353;overflow: hidden;}
 .search-detail span{margin:0 5px 0 0px;color:#535353;font-size: 14px}
 .page{margin:10px 0;}
 .page a{padding:5px;color:#3399cc;}
@@ -130,14 +130,14 @@ a:focus{
 		<div class="item cf">
 		      <img src="${item["avatar"]}" alt="" class="fl avatar"/>
 		      <div class="fl">
-			<p><a href="${item["url"]}" class="search-red">${item["title"]?html}</a></p>
+			<p><a href="${item["url"]}" class="search-red">${item["title"]}</a></p>
 			<p><a href="${item["url"]}" class="link-green">${item["url"]}</a></p>
 			<p class="user-type">以琳用户</p>
 		      </div>
 		</div>	
 	<#else>
 	    <div class="item cf">
-	      <a href="${item["url"]}" class="search-title">${item["title"]?html}</a>
+	      <a href="${item["url"]}" class="search-title">${item["title"]}</a>
 	      <p class=""><a href="${item["url"]}" class="link-green">${item["url"]}</a></p>
 	      <p class="search-detail">
 		 <span>2013-07-25 22:11:56</span>
@@ -146,7 +146,7 @@ a:focus{
 		 <span>总量 166</span>
 		 <span><a href="#">-帖子</a></span>
 	      </p>
-	      <p class="search-art">${item["content"]?html}</p>
+	      <p class="search-art">${item["content"]}</p>
 	    </div>
 	</#if>
 </#list>
