@@ -153,30 +153,30 @@ a:focus{
 
 
 <#if (total > 0)>
-<div class="page">
-<#if (offset >= 20)>
-<a href="./q?type=${type}&q=${query}&offset=${(offset-20)?c}">上一页</a>
-<#else>
-上一页
-</#if>
+    <div class="page">
+    <#if (offset >= 20)>
+        <a href="./q?type=${type}&q=${query}&offset=${(offset-20)?c}">上一页</a>
+    <#else>
+        上一页
+    </#if>
 
-<#assign now = offset/20+1>
-<#assign max = ((total+19)/20)?int>
-<#list -5..5 as i>
-	<#if ((i+now) > 0 && (i + now) <= max)>
-	
-	<a href="./q?type=${type}&q=${query}&offset=${((i + now -1)*20)?c}" class="<#if i == 0>active<#else></#if>">${i+now}</a>	
-	</#if>
-</#list>
+    <#assign now = offset/20+1>
+    <#assign max = ((total+19)/20)?int>
+    <#list -5..5 as i>
+        <#if ((i+now) > 0 && (i + now) <= max)>
+        
+        <a href="./q?type=${type}&q=${query}&offset=${((i + now -1)*20)?c}" class="<#if i == 0>active<#else></#if>">${i+now}</a>	
+        </#if>
+    </#list>
 
 
-<#if (offset + 20 <= total)>
-<a href="./q?type=${type}&q=${query}&offset=${(offset+20)?c}">下一页</a>
-<#else>
-下一页
-</#if>
-</div>
-</#if>
+    <#if (offset + 20 <= total)>
+        <a href="./q?type=${type}&q=${query}&offset=${(offset+20)?c}">下一页</a>
+    <#else>
+        下一页
+    </#if>
+    </div>
+
     <div class="search-relative">
 <!--
       <span>相关搜索</span><a href="#">夏小桃</a><a href="#">夏小桃</a><a href="#">夏小桃</a>
@@ -196,6 +196,7 @@ a:focus{
       </div>
       <div class="tip"><!-- <a href="">高级搜索</a> --> <a href="http://www.sojump.com/jq/2615772.aspx">反馈意见</a></div>
   </div>
+</#if>
 </div>
 </div>
 </body>
