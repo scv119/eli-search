@@ -34,20 +34,25 @@ public class FileDiscussionDao implements DiscussionDao {
                 }
             }
 
-            if (tokens.size() >= 33) {
-                Discussion discussion = new Discussion(Integer.parseInt(tokens.get(0)), Integer.parseInt(tokens.get(1)), Integer.parseInt(tokens.get(2)), Integer.parseInt(tokens.get(3)), tokens.get(7), tokens.get(8),tokens.get(10));
-                if(discussion.topicId == 0)
-                    discussion.topicId = discussion.id;
-                if (!map.containsKey(discussion.topicId))
-                    map.put(discussion.topicId, new ArrayList<Discussion>());
-                map.get(discussion.topicId).add(discussion);
+            try {
+                if (tokens.size() >= 33) {
+                    Discussion discussion = new Discussion(Integer.parseInt(tokens.get(0)), Integer.parseInt(tokens.get(1)), Integer.parseInt(tokens.get(2)), Integer.parseInt(tokens.get(3)), tokens.get(7), tokens.get(8),tokens.get(10));
+                    if(discussion.topicId == 0)
+                        discussion.topicId = discussion.id;
+                    if (!map.containsKey(discussion.topicId))
+                        map.put(discussion.topicId, new ArrayList<Discussion>());
+                    map.get(discussion.topicId).add(discussion);
 
-                for (int i = 0; i < 33; i ++)
-                    tokens.remove(0);
+                    for (int i = 0; i < 33; i ++)
+                        tokens.remove(0);
+                }
+            } catch (Exception e) {
+                continue;
+            } finally {
+
+                if (line == null)
+                    break;
             }
-
-            if (line == null)
-                break;
 
         }
     }
