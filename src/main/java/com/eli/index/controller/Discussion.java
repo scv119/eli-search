@@ -10,14 +10,16 @@ package com.eli.index.controller;
 public class Discussion implements Comparable{
     public int id;
     public int topicId;
+    public int topicSort;
     public String  title;
     public String content;
     public String date;
 
-    public Discussion(int id, int topicId, String title, String content, String date) {
+    public Discussion(int id, int topicId, int topicSort, String title, String content, String date) {
         this.id = id;
         this.topicId = topicId;
         this.title = title;
+        this.topicSort = topicSort;
         this.content = content;
         this.date = date;
     }

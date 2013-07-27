@@ -35,7 +35,7 @@ public class FileDiscussionDao implements DiscussionDao {
             }
 
             if (tokens.size() >= 33) {
-                Discussion discussion = new Discussion(Integer.parseInt(tokens.get(0)), Integer.parseInt(tokens.get(1)), tokens.get(7), tokens.get(8),tokens.get(10));
+                Discussion discussion = new Discussion(Integer.parseInt(tokens.get(0)), Integer.parseInt(tokens.get(1)), Integer.parseInt(tokens.get(2)), tokens.get(7), tokens.get(8),tokens.get(10));
                 if(discussion.topicId == 0)
                     discussion.topicId = discussion.id;
                 if (!map.containsKey(discussion.topicId))
