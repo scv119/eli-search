@@ -96,10 +96,9 @@ public class MainSearch extends BasicAction {
                     if  (content == null)
                         content = "";
 
-                    String []highLight = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", doc.get("content.NGRAM")
+                    String highLight = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", doc.get("content.NGRAM")
                                 ,3, 3);
-                    for (String s: highLight)
-                        logger.info(s);
+                    logger.info(highLight);
 
                     TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
                     String hContent = highlighter.getBestFragment(stream, content);
@@ -140,7 +139,7 @@ public class MainSearch extends BasicAction {
 
     }
 
-    public static String[] getFragmentsWithHighlightedTerms(Analyzer analyzer, Query query,
+    public static String getFragmentsWithHighlightedTerms(Analyzer analyzer, Query query,
                                                      String fieldName, String fieldContents, int fragmentNumber, int fragmentSize) throws IOException, InvalidTokenOffsetsException {
 
         TokenStream stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
@@ -151,7 +150,8 @@ public class MainSearch extends BasicAction {
         highlighter.setTextFragmenter(fragmenter);
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
 
-        String[] fragments = highlighter.getBestFragments(stream, fieldContents, fragmentNumber);
+        String fragments = highlighter.getBestFragment(stream, fieldContents);
+
 
         return fragments;
     }
