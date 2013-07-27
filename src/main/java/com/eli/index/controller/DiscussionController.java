@@ -38,9 +38,11 @@ public class DiscussionController {
             for (int j = 0; j < 20 && i * 20 + j < ids.size(); j ++) {
                 DiscussionDoc doc = new DiscussionDoc();
                 Discussion dis= ids.get(i * 20 + j);
+                doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ar=" + dis.topicSort +"&Aq=1" ;
                 if (j == 0)
                     doc.setBoost(1.2f);
-                doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ar=" + dis.topicSort +"&Aq=1" ;
+                else
+                    break;
                 if (dis.title != null)
                     doc.title = dis.title;
                 doc.content = dis.content;
