@@ -33,10 +33,12 @@ public class MainSearch extends BasicAction {
         String avatar_url = null;
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
         int limit  = Integer.parseInt(super.getParam("limit", "10"));
+	int _type   = Integer.parseInt(super.getParam("type", "0"));
 
         super.put("query", token);
         super.put("offset", offset);
         super.put("limit", limit);
+	super.put("type", _type);
         super.put("total", 0);
         super.put("page", 0);
 
@@ -51,13 +53,25 @@ public class MainSearch extends BasicAction {
             Query sub2 = new TermQuery(new Term("name.None", token));
 
             BooleanQuery query = new BooleanQuery();
-            query.add(sub, BooleanClause.Occur.SHOULD);
-            query.add(sub1, BooleanClause.Occur.SHOULD);
-            query.add(sub2, BooleanClause.Occur.SHOULD);
+            if (_type == 0) {
+                query.add(sub, BooleanClause.Occur.SHOULD);
+                query.add(sub1, BooleanClause.Occur.SHOULD);
+                query.add(sub2, BooleanClause.Occur.SHOULD);
+            } else {
+                Query sub3 = new TermQuery(new Term("type.None", _type == 1 ? "topic" : "member"));
+                BooleanQuery sub4 = new BooleanQuery();
+
+                sub4.add(sub, BooleanClause.Occur.SHOULD);
+                sub4.add(sub1, BooleanClause.Occur.SHOULD);
+                sub4.add(sub2, BooleanClause.Occur.SHOULD);
+
+                query.add(sub3, BooleanClause.Occur.MUST);
+                query.add(sub4, BooleanClause.Occur.MUST);
+            }
 
             TopDocs hits = searcher.search(query, offset + limit);
             QueryScorer scorer = new QueryScorer(query);
-            Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"hi\">", "</span>"), new SimpleHTMLEncoder(), scorer);
+            Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), new SimpleHTMLEncoder(), scorer);
             highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 60));
 
             super.put("total", hits.totalHits);
