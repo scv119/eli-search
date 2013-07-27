@@ -97,7 +97,9 @@ public class MainSearch extends BasicAction {
                         content = "";
 
                     String highLight = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", doc.get("content.NGRAM")
-                                ,3, 3);
+                                ,3, 30);
+                    logger.info(highLight);
+                    highLight = getFragmentsWithHighlightedTerms(analyzer, query, "title.NGRAM", doc.get("content.NGRAM"), 3, 30);
                     logger.info(highLight);
 
                     TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
@@ -146,7 +148,8 @@ public class MainSearch extends BasicAction {
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer, fragmentSize);
 
-        Highlighter highlighter = new Highlighter(scorer);
+//        Highlighter highlighter = new Highlighter(scorer);
+        Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), new SimpleHTMLEncoder(), scorer);
         highlighter.setTextFragmenter(fragmenter);
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
 
