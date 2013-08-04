@@ -26,15 +26,13 @@ import org.apache.lucene.util.Version;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MainSearch extends BasicAction {
     private static final Logger logger = Logger.getLogger(MainSearch.class);
     private static Analyzer analyzer= new CJKAnalyzer(Version.LUCENE_36);
     private CacheMemberDao memberDao = CacheMemberDao.INSTANCE;
+    private DateFormat weiredFormat = new SimpleDateFormat("yyyyMMddHHmmss");
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -107,24 +105,20 @@ public class MainSearch extends BasicAction {
                         title = "";
                     if  (content == null)
                         content = "";
-                    StringUtils.replaceEach(title, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
-                    String highLight = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", doc.get("content.NGRAM")
-                                ,3, 30);
-                    logger.info(highLight);
-                    highLight = getFragmentsWithHighlightedTerms(analyzer, query, "title.NGRAM", doc.get("content.NGRAM"), 3, 30);
-                    logger.info(highLight);
 
-                    TokenStream stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "content.NGRAM", doc, analyzer );
-                    String hContent = highlighter.getBestFragment(stream, content);
-                    stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), docId, "title.NGRAM", doc, analyzer );
-                    String hTitle = highlighter.getBestFragment(stream, title);
+                    String hContent = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", content,10, 70);
+                    String hTitle  = getFragmentsWithHighlightedTerms(analyzer, query, "title.NGRAM", title, 10, 200);
+                    logger.info(hTitle);
+                    logger.info(hContent);
+
+
                     if (hTitle == null && title.length() == 0)
                         hTitle = "无标题";
-                    else
+                    else if(hTitle == null)
                         hTitle = title.substring(0, Math.min(25, title.length()));
                     if  (hContent == null && (content == null || content.length() == 0))
                         hContent = "无内容";
-                    else
+                    else if(hContent == null)
                         hContent = content.substring(0, Math.min(80, content.length()));
 
                     if (type.equals("topic"))
@@ -136,12 +130,15 @@ public class MainSearch extends BasicAction {
 
                     if (type.equals("discussion")) {
                         DiscussionDoc discussion = new DiscussionDoc(doc);
-                        map.put("created", format.format(discussion.getDate()));
+                        map.put("created", formatWeiredDate(discussion.getDate()));
                         map.put("hits", discussion.getHits());
                         Member member = memberDao.getMember(discussion.author);
                         if (member != null) {
                             map.put("author_name", member.getName());
                             map.put("author_url", member.getUrl());
+                        } else {
+                            map.put("author_name", "以琳用户");
+                            map.put("author_url", "#");
                         }
                     }
 
@@ -167,12 +164,14 @@ public class MainSearch extends BasicAction {
     public static String getFragmentsWithHighlightedTerms(Analyzer analyzer, Query query,
                                                      String fieldName, String fieldContents, int fragmentNumber, int fragmentSize) throws IOException, InvalidTokenOffsetsException {
 
+        fieldContents = StringUtils.replaceEach(fieldContents, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
+    
         TokenStream stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer, fragmentSize);
 
 //        Highlighter highlighter = new Highlighter(scorer);
-        Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), new SimpleHTMLEncoder(), scorer);
+        Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), scorer);
         highlighter.setTextFragmenter(fragmenter);
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
 
@@ -182,4 +181,15 @@ public class MainSearch extends BasicAction {
         return fragments;
     }
 
+
+    public String formatWeiredDate(String wd) {
+        try {
+            Date date = weiredFormat.parse(wd);
+            wd = format.format(date);
+        } catch (Exception e) {
+            logger.error(e);
+        } finally {
+            return wd;
+        }
+    }
 }

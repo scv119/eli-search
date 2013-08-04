@@ -37,7 +37,7 @@ public class DiscussionDoc extends DocumentSupport {
     public int author;
 
     @IField(indexTypes = {IndexType.None})
-    public long date;
+    public String date;
 
     @IField(indexTypes = {IndexType.None})
     public int hits;
@@ -66,7 +66,6 @@ public class DiscussionDoc extends DocumentSupport {
         this.title = title;
     }
 
-
     public int getAuthor() {
         return author;
     }
@@ -75,11 +74,11 @@ public class DiscussionDoc extends DocumentSupport {
         this.author = author;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

@@ -39,6 +39,9 @@ public class DiscussionController {
                 DiscussionDoc doc = new DiscussionDoc();
                 Discussion dis= ids.get(i * 20 + j);
                 doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ar=" + dis.topicSort +"&Aq=1" ;
+                doc.hits = dis.readCount;
+                doc.date = dis.date + "";
+                doc.author = dis.author;
                 if (dis.topicId == dis.id)
                     doc.setBoost(1.2f);
                 else
