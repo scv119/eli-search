@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <script src="./js/jquery.js"></script>
 <script>
 $(document).ready(function(){
   $("#submit-btn0").click(function(){
-    window.location = './q?type=${type}&q=' + $("#q0").val() ; 
+    window.location = './q?type=${type}&q=' + encodeURI($("#q0").val()) ; 
   });
   $("#submit-btn1").click(function(){
-    window.location = './q?type=${type}&q=' + $("#q1").val(); 
+    window.location = './q?type=${type}&q=' + encodeURI($("#q1").val()); 
   });
 });
 
@@ -97,15 +98,15 @@ a:focus{
 <div class="wrap">
 <div class="search-tab">
 	<div class="choice dl">
-    <a href="./q?q=${query}&type=0" class="word dl<#if type==0> active </#if>">全部</a>
+    <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=0')" class="word dl<#if type==0> active </#if>">全部</a>
     <p class="bg<#if type!=0> hide </#if>"></p>
   </div>
   <div class="choice dl">
-    <a href="./q?q=${query}&type=1" class="word dl<#if type==1> active </#if>">版块</a>
+    <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=1')" class="word dl<#if type==1> active </#if>">版块</a>
     <p class="bg<#if type!=1> hide </#if>"></p>
   </div>
   <div class="choice dl">
-    <a href="./q?q=${query}&type=2" class="word dl<#if type==2> active </#if>">用户</a>
+    <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=2')" class="word dl<#if type==2> active </#if>">用户</a>
     <p class="bg<#if type!=2> hide </#if>"></p>
   </div>
 </div>
@@ -155,7 +156,7 @@ a:focus{
 <#if (total > 0)>
     <div class="page">
     <#if (offset >= 20)>
-        <a href="./q?type=${type}&q=${query}&offset=${(offset-20)?c}">上一页</a>
+        <a href=" javascript:window.location.href=encodeURI('./q?type=${type}&q=${query}&offset=${(offset-20)?c}')">上一页</a>
     <#else>
         上一页
     </#if>
@@ -165,13 +166,13 @@ a:focus{
     <#list -5..5 as i>
         <#if ((i+now) > 0 && (i + now) <= max)>
         
-        <a href="./q?type=${type}&q=${query}&offset=${((i + now -1)*20)?c}" class="<#if i == 0>active<#else></#if>">${i+now}</a>	
+        <a href="javascript:window.location.href=encodeURI('./q?type=${type}&q=${query}&offset=${((i + now -1)*20)?c}')" class="<#if i == 0>active<#else></#if>">${i+now}</a>	
         </#if>
     </#list>
 
 
     <#if (offset + 20 <= total)>
-        <a href="./q?type=${type}&q=${query}&offset=${(offset+20)?c}">下一页</a>
+        <a href="javascript:window.location.href=encodeURI('./q?type=${type}&q=${query}&offset=${(offset+20)?c}')">下一页</a>
     <#else>
         下一页
     </#if>
