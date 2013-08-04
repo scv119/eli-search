@@ -2,9 +2,15 @@ package com.eli.web.action;
 
 
 
+import com.eli.index.DocumentSupport;
+import com.eli.index.controller.CacheMemberDao;
+import com.eli.index.controller.Member;
+import com.eli.index.controller.MemberDao;
+import com.eli.index.document.DiscussionDoc;
 import com.eli.index.manager.MultiNRTSearcherAgent;
 import com.eli.index.manager.ZhihuIndexManager;
 import com.eli.web.BasicAction;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -18,6 +24,8 @@ import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.util.Version;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +34,9 @@ import java.util.Map;
 public class MainSearch extends BasicAction {
     private static final Logger logger = Logger.getLogger(MainSearch.class);
     private static Analyzer analyzer= new CJKAnalyzer(Version.LUCENE_36);
+    private CacheMemberDao memberDao = CacheMemberDao.INSTANCE;
+    private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     @Override
     protected void execute() throws IOException {
@@ -44,7 +55,7 @@ public class MainSearch extends BasicAction {
 
         QueryParser qp = new QueryParser(Version.LUCENE_36, "content.NGRAM", analyzer);
         QueryParser qp1 = new QueryParser(Version.LUCENE_36, "title.NGRAM", analyzer);
-        List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
+        List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
         MultiNRTSearcherAgent agent = ZhihuIndexManager.INSTANCE.acquire();
         try{
             IndexSearcher searcher = agent.getSearcher();
@@ -76,13 +87,14 @@ public class MainSearch extends BasicAction {
 
             super.put("total", hits.totalHits);
 
-
             for (int i = offset; i < hits.scoreDocs.length && i < offset + limit; i++) {
                 int docId = hits.scoreDocs[i].doc;
                 Document doc = searcher.doc(docId);
                 String content =  doc.get("content.NGRAM");
                 String title =  doc.get("title.NGRAM");
                 String type  = doc.get("type.None");
+
+                Map<String,Object> map = new HashMap<String, Object>();
 
                 if (type.equals("member")) {
                     content = "以琳用户";
@@ -95,7 +107,7 @@ public class MainSearch extends BasicAction {
                         title = "";
                     if  (content == null)
                         content = "";
-
+                    StringUtils.replaceEach(title, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
                     String highLight = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", doc.get("content.NGRAM")
                                 ,3, 30);
                     logger.info(highLight);
@@ -122,12 +134,23 @@ public class MainSearch extends BasicAction {
                     title   = hTitle;
                     avatar_url = null;
 
+                    if (type.equals("discussion")) {
+                        DiscussionDoc discussion = new DiscussionDoc(doc);
+                        map.put("created", format.format(discussion.getDate()));
+                        map.put("hits", discussion.getHits());
+                        Member member = memberDao.getMember(discussion.author);
+                        if (member != null) {
+                            map.put("author_name", member.getName());
+                            map.put("author_url", member.getUrl());
+                        }
+                    }
+
                 }
                 String url     =  doc.get("url.None");
-                Map<String,String> map = new HashMap<String, String>();
                 map.put("content", content);
                 map.put("title", title);
                 map.put("url", url);
+                map.put("type", type);
                 if (avatar_url != null)
                     map.put("avatar", avatar_url);
                 ret.add(map);

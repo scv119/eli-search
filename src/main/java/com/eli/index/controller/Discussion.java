@@ -13,8 +13,10 @@ public class Discussion implements Comparable{
     public int topicSort;
     public String  title;
     public String content;
-    public String date;
+    public long date;
     public int boardId;
+    public int readCount;
+    public int author;
 
     public Discussion(int id, int topicId, int topicSort, int boardId, String title, String content, String date) {
         this.boardId = boardId;
@@ -23,11 +25,12 @@ public class Discussion implements Comparable{
         this.title = title;
         this.topicSort = topicSort;
         this.content = content;
-        this.date = date;
+        this.date = Long.parseLong(date);
     }
 
     @Override
     public int compareTo(Object o) {
-       return this.date.compareTo(((Discussion)o).date);
+        long diff = this.date - (((Discussion)o).date);
+        return diff < 0 ? -1 : (diff == 0? 0 : 1);
     }
 }

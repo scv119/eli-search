@@ -16,7 +16,7 @@ public class MemberController {
     private MemberDao memberDao;
 
     public MemberController() {
-        this.memberDao = new FileMemberDao();
+        this.memberDao = CacheMemberDao.INSTANCE;
     }
 
     public List<MemberDoc> getMembers() {

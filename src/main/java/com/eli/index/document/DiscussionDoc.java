@@ -33,6 +33,15 @@ public class DiscussionDoc extends DocumentSupport {
     @IField(indexTypes = {IndexType.NGRAM})
     public String title = "";
 
+    @IField(indexTypes = {IndexType.None})
+    public int author;
+
+    @IField(indexTypes = {IndexType.None})
+    public long date;
+
+    @IField(indexTypes = {IndexType.None})
+    public int hits;
+
     public String getContent() {
         return content;
     }
@@ -55,5 +64,30 @@ public class DiscussionDoc extends DocumentSupport {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    public int getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(int author) {
+        this.author = author;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public void setHits(int hits) {
+        this.hits = hits;
     }
 }

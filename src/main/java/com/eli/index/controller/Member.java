@@ -44,4 +44,8 @@ public class Member {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    public String getUrl() {
+        return "http://new.elimautism.org/User/LookUserInfo.asp?id=" + id;
+    }
 }

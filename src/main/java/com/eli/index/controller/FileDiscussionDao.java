@@ -42,6 +42,8 @@ public class FileDiscussionDao implements DiscussionDao {
                     if (!map.containsKey(discussion.topicId))
                         map.put(discussion.topicId, new ArrayList<Discussion>());
                     map.get(discussion.topicId).add(discussion);
+                    discussion.author = Integer.parseInt(tokens.get(15));
+                    discussion.readCount = Integer.parseInt(tokens.get(12));
 
                     for (int i = 0; i < 33; i ++)
                         tokens.remove(0);
