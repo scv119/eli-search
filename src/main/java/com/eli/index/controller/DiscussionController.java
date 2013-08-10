@@ -38,7 +38,7 @@ public class DiscussionController {
             for (int j = 0; j < 20 && i * 20 + j < ids.size(); j ++) {
                 DiscussionDoc doc = new DiscussionDoc();
                 Discussion dis= ids.get(i * 20 + j);
-                doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.topicId + "&Ar=" + dis.topicSort +"&Aq=1" ;
+                doc.url = "http://new.elimautism.org/a/a.asp?ID="+ dis.id + "&Ar=" + dis.topicSort +"&Aq=1" ;
                 doc.hits = dis.readCount;
                 doc.date = dis.date + "";
                 doc.author = dis.author;
@@ -46,7 +46,7 @@ public class DiscussionController {
                     doc.setBoost(1.2f);
                     doc.setSeqOfThread(0);
                 } else {
-                    doc.setSeqOfThread(i * 20 + j);
+                    doc.setSeqOfThread(1);
                 }
 
                 if (dis.boardId == 78 || dis.boardId == 50 || dis.boardId == 444)
