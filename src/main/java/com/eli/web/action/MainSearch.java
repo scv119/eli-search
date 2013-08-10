@@ -39,12 +39,15 @@ public class MainSearch extends BasicAction {
         String avatar_url = null;
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
         int limit  = Integer.parseInt(super.getParam("limit", "10"));
-	int _type   = Integer.parseInt(super.getParam("type", "0"));
+	    int _type   = Integer.parseInt(super.getParam("type", "0"));
+        String adv = super.getParam("adv", "no");
+        String author = super.getParam("author", "").trim();
+        String reply  = super.getParam("reply", "no");
 
         super.put("query", token);
         super.put("offset", offset);
         super.put("limit", limit);
-	super.put("type", _type);
+    	super.put("type", _type);
         super.put("total", 0);
         super.put("page", 0);
 
@@ -54,8 +57,12 @@ public class MainSearch extends BasicAction {
         MultiNRTSearcherAgent agent = ZhihuIndexManager.INSTANCE.acquire();
         try{
             IndexSearcher searcher = agent.getSearcher();
-            Query sub = qp.parse(token);
-            Query sub1 = qp1.parse(token);
+            Query sub = new TermQuery(new Term("content.NGRAM", ""));
+            Query sub1 = new TermQuery(new Term("title.NGRAM", ""));
+            if (token.trim().length() != 0) {
+                sub = qp.parse(token);
+                sub1 = qp1.parse(token);
+            }
             Query sub2 = new TermQuery(new Term("name.None", token));
 
             BooleanQuery query = new BooleanQuery();
@@ -64,12 +71,25 @@ public class MainSearch extends BasicAction {
                 query.add(sub1, BooleanClause.Occur.SHOULD);
                 query.add(sub2, BooleanClause.Occur.SHOULD);
 
-//                int specialId = getSpecialMemberId(token);
-//                if (specialId > 0) {
-//                    TermQuery specialNameQuery = new TermQuery(new Term("author.None", specialId + ""));
-//                    specialNameQuery.setBoost(1.2f);
-//                    query.add(specialNameQuery, BooleanClause.Occur.SHOULD);
-//                }
+                if (adv.equals("yes") && author.length() > 0) {
+                    int memberId = getMemberId(author);
+                    if (memberId > 0) {
+                        TermQuery specialNameQuery = new TermQuery(new Term("author.None", memberId + ""));
+                        BooleanQuery tmpQuery = new BooleanQuery();
+                        tmpQuery.add(specialNameQuery, BooleanClause.Occur.MUST);
+                        if (token.trim().length() > 0)
+                            tmpQuery.add(query, BooleanClause.Occur.MUST);
+                        query = tmpQuery;
+                    }
+                }
+
+                if (adv.equals("no") || (adv.equals("yes") && reply.equals("no"))) {
+                    BooleanQuery tmpQuery = new BooleanQuery();
+                    TermQuery filterQuery = new TermQuery(new Term("seqOfThread.None",  "0"));
+                    tmpQuery.add(filterQuery, BooleanClause.Occur.MUST);
+                    tmpQuery.add(query, BooleanClause.Occur.MUST);
+                    query = tmpQuery;
+                }
             } else {
                 Query sub3 = new TermQuery(new Term("type.None", _type == 1 ? "topic" : "member"));
                 BooleanQuery sub4 = new BooleanQuery();
@@ -161,6 +181,10 @@ public class MainSearch extends BasicAction {
         } finally {
             ZhihuIndexManager.INSTANCE.release(agent);
         }
+
+        super.put("reply", reply);
+        super.put("author", author);
+        super.put("adv", adv);
         super.put("ret", ret);
 
     }
@@ -197,16 +221,11 @@ public class MainSearch extends BasicAction {
         }
     }
 
-    public int getSpecialMemberId(String query) {
+    public int getMemberId(String query) {
         if (query != null) {
-            String[] queries = query.split(" ");
-            for (String token:queries) {
-                int id = memberDao.getMemberId(token);
-                if (id > 0)
-                    return id;
-            }
+            query = query.trim();
+            return memberDao.getMemberId(query);
         }
-
-        return -1;
+        return 0;
     }
 }

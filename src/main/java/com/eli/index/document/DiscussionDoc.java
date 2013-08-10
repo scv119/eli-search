@@ -42,6 +42,9 @@ public class DiscussionDoc extends DocumentSupport {
     @IField(indexTypes = {IndexType.None})
     public int hits;
 
+    @IField(indexTypes = {IndexType.None})
+    public int seqOfThread;
+
     public String getContent() {
         return content;
     }
@@ -88,5 +91,13 @@ public class DiscussionDoc extends DocumentSupport {
 
     public void setHits(int hits) {
         this.hits = hits;
+    }
+
+    public int getSeqOfThread() {
+        return seqOfThread;
+    }
+
+    public void setSeqOfThread(int seqOfThread) {
+        this.seqOfThread = seqOfThread;
     }
 }

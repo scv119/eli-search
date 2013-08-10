@@ -2,15 +2,49 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<script src="./js/jquery.js"></script>
+<script src="http://223.202.15.20/js/jquery.js"></script>
 <script>
+    function jump(offset){
+        var checked = 'no';
+        if ($("#reply").is(':checked'))
+            checked = 'yes';
+        var adv = 'no';
+        if ($("#adv-div").css('display') == 'block')
+            adv = 'yes';
+        window.location = './q?type=${type}&q=' + encodeURI($("#q0").val()) + '&author=' + encodeURI($("#author").val()) + '&reply=' + checked  + '&adv=' + adv + '&offset=' + offset; 
+    }
+
 $(document).ready(function(){
-  $("#submit-btn0").click(function(){
-    window.location = './q?type=${type}&q=' + encodeURI($("#q0").val()) ; 
-  });
-  $("#submit-btn1").click(function(){
-    window.location = './q?type=${type}&q=' + encodeURI($("#q1").val()); 
-  });
+    if ("${adv}" == "yes") {
+        $("#adv-div").show();
+
+        if ("${reply}" == "yes")
+            $("#reply").prop('checked', true);
+        else
+            $("#reply").prop('checked', false);
+        $('#author').prop('value', "${author}");
+    } else
+        $("#adv-div").hide();
+
+
+    $("#submit-btn0").click(function(){
+        jump(0);
+    });
+
+    $("#submit-btn1").click(function(){
+        window.location = './q?type=${type}&q=' + encodeURI($("#q1").val()); 
+    });
+
+   $("#adv-toggle").click(function(){
+        $("#adv-div").toggle();
+    });
+
+    $('#q0,#author').keypress(function (e) {
+      if (e.which == 13) {
+        e.preventDefault();
+        jump(0);
+      }
+    });
 });
 
 </script>
@@ -43,6 +77,8 @@ a:focus{
 .search-form{padding-left:25px;}
 .search-input{position: relative;float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);background: url(img/search_icon.png) no-repeat 8px 11px;}
 .search-input input{width:418px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;margin-left:28px;vertical-align: top;}
+.advance-input {width:300px;height:30px;margin-top:5px;margin-right:20px;font:16px arial;}
+.advance-check {width:300px;height:30px;margin-top:5px;font:16px arial;}
 #search-form{width:560px;}
 #search-form .submit-btn{float: left;*display: inline;*zoom:1;width:107px;height:38px;background: url(img/search_btn.png) no-repeat 0 0;margin:0 0 0 -2px;}
 .search-wrap .shadow-x{
@@ -111,17 +147,26 @@ a:focus{
   </div>
 </div>
 
-<div class="search-wrap cf">
-	<form id="search-form" action="./q">
-		<div class="search-input">
-		    <div class="shadow-x"></div>
-		    <div class="shadow-y"></div>
-		    <input type="text" name="q" id="q0" value="${query}"/>
-		    <input type="hidden" name="type"  value="${type}"/>
-		</div>
-		<a class="submit-btn" id="submit-btn0"></a>
-	</form>
+<div class="pos">
+  <div class="search-wrap cf" >
+    <form id="search-form" action="./q">
+      <div class="search-input">
+          <div class="shadow-x"></div>
+          <div class="shadow-y"></div>
+          <input type="text" name="q" id="q0" value="${query}"/>
+          <input type="hidden" name="type"  value="${type}"/>
+      </div>
+      <a class="submit-btn" id="submit-btn0"></a>
+    </form>
+  </div>
+  <div class="tip"><a id="adv-toggle">高级搜索</a><a href="">反馈意见</a></div>
+  <div id="adv-div">
+        <input type="text" class="advance-input" id="author" placeholder="帖子作者"/>
+        包含回复
+        <input type="checkbox" class="advnace-check" id="reply"/>
+  </div>
 </div>
+
 <div class="search-count">
     <p>搜索到${total}个结果</p>
 </div>
@@ -156,7 +201,7 @@ a:focus{
 <#if (total > 0)>
     <div class="page">
     <#if (offset >= 20)>
-        <a href=" javascript:window.location.href=encodeURI('./q?type=${type}&q=${query}&offset=${(offset-20)?c}')">上一页</a>
+        <a href=" javascript:jump(${(offset-20)?c})">上一页</a>
     <#else>
         上一页
     </#if>
@@ -166,13 +211,13 @@ a:focus{
     <#list -5..5 as i>
         <#if ((i+now) > 0 && (i + now) <= max)>
         
-        <a href="javascript:window.location.href=encodeURI('./q?type=${type}&q=${query}&offset=${((i + now -1)*20)?c}')" class="<#if i == 0>active<#else></#if>">${i+now}</a>	
+        <a href="javascript:jump(${((i + now -1)*20)?c})" class="<#if i == 0>active<#else></#if>">${i+now}</a>	
         </#if>
     </#list>
 
 
     <#if (offset + 20 <= total)>
-        <a href="javascript:window.location.href=encodeURI('./q?type=${type}&q=${query}&offset=${(offset+20)?c}')">下一页</a>
+        <a href="javascript:jump(${(offset+20)?c})">下一页</a>
     <#else>
         下一页
     </#if>

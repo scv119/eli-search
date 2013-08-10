@@ -42,10 +42,12 @@ public class DiscussionController {
                 doc.hits = dis.readCount;
                 doc.date = dis.date + "";
                 doc.author = dis.author;
-                if (dis.topicId == dis.id)
+                if (dis.topicId == dis.id) {
                     doc.setBoost(1.2f);
-                else
-                    continue;
+                    doc.setSeqOfThread(0);
+                } else {
+                    doc.setSeqOfThread(i * 20 + j);
+                }
 
                 if (dis.boardId == 78 || dis.boardId == 50 || dis.boardId == 444)
                     continue;
