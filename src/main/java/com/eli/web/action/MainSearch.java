@@ -85,7 +85,13 @@ public class MainSearch extends BasicAction {
 
                 if (adv.equals("no") || (adv.equals("yes") && reply.equals("no"))) {
                     BooleanQuery tmpQuery = new BooleanQuery();
-                    TermQuery filterQuery = new TermQuery(new Term("seqOfThread.None",  "0"));
+                    TermQuery filterQuery1 = new TermQuery(new Term("seqOfThread.None",  "0"));
+                    TermQuery filterQuery2 = new TermQuery(new Term("type.None",  "topic"));
+                    TermQuery filterQuery3 = new TermQuery(new Term("type.None",  "member"));
+                    BooleanQuery filterQuery = new BooleanQuery();
+                    filterQuery.add(filterQuery1, BooleanClause.Occur.SHOULD);
+                    filterQuery.add(filterQuery2, BooleanClause.Occur.SHOULD);
+                    filterQuery.add(filterQuery3, BooleanClause.Occur.SHOULD);
                     tmpQuery.add(filterQuery, BooleanClause.Occur.MUST);
                     tmpQuery.add(query, BooleanClause.Occur.MUST);
                     query = tmpQuery;
