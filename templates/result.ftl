@@ -47,6 +47,37 @@ $(document).ready(function(){
         jump(0);
       }
     });
+
+    $( "#author" ).autocomplete({
+   source: function( request, response ) {
+    $.ajax({
+     type       : 'POST',
+     url        : 'auto',
+     data       : {
+      q: $("#author").val() 
+     },
+     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+     dataType   : 'json',
+     success    : function( result ) {
+      response( $.map( result, function( eachElement ) {
+       return {
+        label : eachElement,
+        value : eachElement,
+       }
+      }));
+     },
+     error      : function(obj, err) {
+     }
+    });
+   },
+   minLength: 1,
+   select: function( event, ui ) {
+   },
+   open: function() {
+   },
+   close: function() {
+   }
+  });
 });
 
 </script>
