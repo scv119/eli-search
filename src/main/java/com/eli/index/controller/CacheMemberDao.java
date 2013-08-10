@@ -1,5 +1,7 @@
 package com.eli.index.controller;
 
+import com.eli.util.TRIETree;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,15 +20,18 @@ public enum CacheMemberDao implements MemberDao{
     private MemberDao memberDao;
     private Map<Integer, Member> memberMap;
     private Map<String, Integer> nameToId;
+    private TRIETree<Member> trieTree;
 
     private CacheMemberDao () {
         this.memberDao = new FileMemberDao();
         List<Member> members = this.memberDao.getMembers();
         this.memberMap = new HashMap<Integer, Member>();
         this.nameToId = new HashMap<String, Integer>();
+        this.trieTree = new TRIETree<Member>(false);
         for (Member m : members) {
             memberMap.put(m.getId(), m);
             nameToId.put(m.getName(), m.getId());
+            trieTree.put(m.getName(), m);
         }
     }
     @Override
@@ -46,5 +51,9 @@ public enum CacheMemberDao implements MemberDao{
         if (nameToId.containsKey(name))
             return nameToId.get(name);
         return 0;
+    }
+
+    public List<Member> getMemberByPrefix(String prefix, int limit) {
+        return this.trieTree.getValues(prefix, limit);
     }
 }

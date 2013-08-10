@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <script src="http://223.202.15.20/js/jquery.js"></script>
+ <link rel="stylesheet" href="http://223.202.15.20/js/jquery-ui.css" />
+  <script src="http://223.202.15.20/js/jquery-ui.js"></script>
 <script>
     function jump(offset){
         var checked = 'no';
