@@ -2,10 +2,8 @@ package com.eli.web.action;
 
 
 
-import com.eli.index.DocumentSupport;
 import com.eli.index.controller.CacheMemberDao;
 import com.eli.index.controller.Member;
-import com.eli.index.controller.MemberDao;
 import com.eli.index.document.DiscussionDoc;
 import com.eli.index.manager.MultiNRTSearcherAgent;
 import com.eli.index.manager.ZhihuIndexManager;
@@ -15,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
@@ -66,6 +63,13 @@ public class MainSearch extends BasicAction {
                 query.add(sub, BooleanClause.Occur.SHOULD);
                 query.add(sub1, BooleanClause.Occur.SHOULD);
                 query.add(sub2, BooleanClause.Occur.SHOULD);
+
+//                int specialId = getSpecialMemberId(token);
+//                if (specialId > 0) {
+//                    TermQuery specialNameQuery = new TermQuery(new Term("author.None", specialId + ""));
+//                    specialNameQuery.setBoost(1.2f);
+//                    query.add(specialNameQuery, BooleanClause.Occur.SHOULD);
+//                }
             } else {
                 Query sub3 = new TermQuery(new Term("type.None", _type == 1 ? "topic" : "member"));
                 BooleanQuery sub4 = new BooleanQuery();
@@ -191,5 +195,18 @@ public class MainSearch extends BasicAction {
         } finally {
             return wd;
         }
+    }
+
+    public int getSpecialMemberId(String query) {
+        if (query != null) {
+            String[] queries = query.split(" ");
+            for (String token:queries) {
+                int id = memberDao.getMemberId(token);
+                if (id > 0)
+                    return id;
+            }
+        }
+
+        return -1;
     }
 }

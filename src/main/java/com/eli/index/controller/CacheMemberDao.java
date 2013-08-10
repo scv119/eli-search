@@ -17,12 +17,16 @@ public enum CacheMemberDao implements MemberDao{
 
     private MemberDao memberDao;
     private Map<Integer, Member> memberMap;
+    private Map<String, Integer> nameToId;
+
     private CacheMemberDao () {
         this.memberDao = new FileMemberDao();
         List<Member> members = this.memberDao.getMembers();
         this.memberMap = new HashMap<Integer, Member>();
+        this.nameToId = new HashMap<String, Integer>();
         for (Member m : members) {
             memberMap.put(m.getId(), m);
+            nameToId.put(m.getName(), m.getId());
         }
     }
     @Override
@@ -36,5 +40,11 @@ public enum CacheMemberDao implements MemberDao{
         if (memberMap.containsKey(memberId))
             return memberMap.get(memberId);
         return null;
+    }
+
+    public int getMemberId(String name) {
+        if (nameToId.containsKey(name))
+            return nameToId.get(name);
+        return 0;
     }
 }
