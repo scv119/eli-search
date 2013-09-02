@@ -33,6 +33,11 @@ $(document).ready(function(){
         jump(0);
     });
 
+    $("#top20 li").click(function(e){
+        $("#author").val($(this).text());
+    });
+
+
     $("#submit-btn1").click(function(){
         window.location = './q?type=${type}&q=' + encodeURI($("#q1").val()); 
     });
@@ -86,6 +91,7 @@ $(document).ready(function(){
 <title>以琳自闭症论坛-${query}-搜索结果</title>
 <style type="text/css">
 *{margin:0;padding:0;}
+li{list-style:none}
 body{font-family: "微软雅黑";font-size: 15px}
 input[type=text],
 input[type=password],
@@ -106,14 +112,20 @@ a:focus{
 .fr{float:right;display:inline;}
 .dl{display: inline-block;*display: inline;*zoom:1;_display: inline;_zoom:1;}
 .cutoff{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.search-wrap{width:560px;_margin-top:-15px;text-align: center;}
+.search-wrap{width:760px;_margin-top:-15px;text-align: center;}
 .search-form{padding-left:25px;}
-.search-input{position: relative;float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);background: url(img/search_icon.png) no-repeat 8px 11px;}
-.search-input input{width:418px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;margin-left:28px;vertical-align: top;}
+.search-input{width: 300px;position: relative;float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);background: url(img/search_icon.png) no-repeat 8px 11px;}
+.search-input input{width:270px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;margin-left:28px;vertical-align: top;}
+.search-author{position: relative;width:190px;margin-left:10px; margin-right:10px; float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);}
+.search-author input {width:150px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;vertical-align: top;}
 .advance-input {width:300px;height:30px;margin-top:5px;margin-right:20px;font:16px arial;}
 .advance-check {width:300px;height:30px;margin-top:5px;font:16px arial;}
-#search-form{width:560px;}
+#adv-div{width:618px;border:1px solid rgb(204, 204, 204);margin-top:10px;font: 16px arial;line-height:25px;padding-left:8px;height:125px}
+#top20{padding:0px; margin-left:5px; text-align:left; float:left; width: 525px;}
+#top20 li{margin:0px;padding-left:5px;padding-right:5px;width:95px;float:left;overflow:hidden;text-decoration: underline;color:rgb(0,0,255);}
+#search-form{width:760px;}
 #search-form .submit-btn{float: left;*display: inline;*zoom:1;width:107px;height:38px;background: url(img/search_btn.png) no-repeat 0 0;margin:0 0 0 -2px;}
+.more-btn{position:relative;top:10px;float: right;*display: inline;*zoom:1;width:17px;height:17px;background: url(img/more.png) no-repeat 0 0;margin-right:10px;}
 .search-wrap .shadow-x{
    position:absolute;
    top:0;
@@ -172,31 +184,55 @@ a:focus{
   </div>
   <div class="choice dl">
     <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=1')" class="word dl<#if type==1> active </#if>">版块</a>
-    <p class="bg<#if type!=1> hide </#if>"></p>
-  </div>
-  <div class="choice dl">
-    <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=2')" class="word dl<#if type==2> active </#if>">用户</a>
-    <p class="bg<#if type!=2> hide </#if>"></p>
-  </div>
-</div>
+    <p class="bg<#if type!=1> hide </#if>"></p> </div> <div class="choice dl"> <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=2')" class="word dl<#if type==2> active </#if>">用户</a> <p class="bg<#if type!=2> hide </#if>"></p> </div> </div>
 
 <div class="pos">
   <div class="search-wrap cf" >
     <form id="search-form" action="./q">
       <div class="search-input">
-          <div class="shadow-x"></div>
-          <div class="shadow-y"></div>
-          <input type="text" name="q" id="q0" value="${query}"/>
+          <input type="text" name="q" id="q0" value="${query}" placeholder="查询词"/>
           <input type="hidden" name="type"  value="${type}"/>
       </div>
+      <#if type==0>
+      <div class="search-author">
+          <input type="text" name="author" id="author" value="${author}" placeholder="发帖人"/>
+          <a class="more-btn" id="adv-toggle"></a>
+      </div>
+      </#if>
       <a class="submit-btn" id="submit-btn0"></a>
     </form>
   </div>
-  <div class="tip"><a id="adv-toggle">高级搜索</a><a href="">反馈意见</a></div>
+  <div class="tip"><a href="http://www.sojump.com/jq/2615772.aspx">反馈意见</a></div>
   <div id="adv-div">
-        <input type="text" class="advance-input" id="author" placeholder="帖子作者"/>
-        包含回复
-        <input type="checkbox" class="advnace-check" id="reply"/>
+        <div>
+            <input type="checkbox" class="advnace-check" id="reply"/>
+            包含回复
+        </div>
+        <span style="float:left;width:85px;">
+            活跃发帖者:
+        </span>
+        <ul id="top20">
+            <li>3123123123</li>
+            <li>23123123</li>
+            <li>123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+            <li>123123123123123</li>
+        </ul>
   </div>
 </div>
 
@@ -265,8 +301,6 @@ a:focus{
       <div class="search-wrap cf" style="margin-top:15px;">
         <form id="search-form" action="./q">
           <div class="search-input">
-              <div class="shadow-x"></div>
-              <div class="shadow-y"></div>
               <input name="q" id="q1" type="text" value="${query}" />
 	      <input type="hidden" name="type"  value="${type}"/>
           </div>
