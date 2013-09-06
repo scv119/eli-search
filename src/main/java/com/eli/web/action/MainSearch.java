@@ -71,7 +71,7 @@ public class MainSearch extends BasicAction {
                 query.add(sub1, BooleanClause.Occur.SHOULD);
                 query.add(sub2, BooleanClause.Occur.SHOULD);
 
-                if (adv.equals("yes") && author.length() > 0) {
+                if (author.length() > 0) {
                     int memberId = getMemberId(author);
                     if (memberId > 0) {
                         TermQuery specialNameQuery = new TermQuery(new Term("author.None", memberId + ""));
