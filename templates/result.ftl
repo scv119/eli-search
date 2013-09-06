@@ -120,7 +120,7 @@ a:focus{
 .search-author input {width:150px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;vertical-align: top;}
 .advance-input {width:300px;height:30px;margin-top:5px;margin-right:20px;font:16px arial;}
 .advance-check {width:300px;height:30px;margin-top:5px;font:16px arial;}
-#adv-div{width:618px;border:1px solid rgb(204, 204, 204);margin-top:10px;font: 16px arial;line-height:25px;padding-left:8px;height:125px}
+#adv-div{width:618px;border:1px solid rgb(204, 204, 204);margin-top:10px;line-height:25px;padding-left:8px;height:125px}
 #top20{padding:0px; margin-left:5px; text-align:left; float:left; width: 525px;}
 #top20 li{margin:0px;padding-left:5px;padding-right:5px;width:95px;float:left;overflow:hidden;text-decoration: underline;color:rgb(0,0,255);}
 #search-form{width:760px;}
@@ -202,7 +202,9 @@ a:focus{
       <a class="submit-btn" id="submit-btn0"></a>
     </form>
   </div>
+  <#if type==0>
   <div class="tip"><a href="http://www.sojump.com/jq/2615772.aspx">反馈意见</a></div>
+  </#if>
   <div id="adv-div">
         <div>
             <input type="checkbox" class="advnace-check" id="reply"/>
@@ -307,7 +309,6 @@ a:focus{
           <a class="submit-btn" id="submit-btn1"></a>
         </form>
       </div>
-      <div class="tip"><!-- <a href="">高级搜索</a> --> <a href="http://www.sojump.com/jq/2615772.aspx">反馈意见</a></div>
   </div>
 </#if>
 </div>
