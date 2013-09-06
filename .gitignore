@@ -1,6 +1,6 @@
 .idea
 *.iml
-target/
+./java/target/
 out/
 *config.properties
 *log4j.properties

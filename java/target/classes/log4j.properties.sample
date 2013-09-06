@@ -1,0 +1,26 @@
+# Root logger option
+log4j.rootLogger=DEBUG, stdout
+
+# Direct log messages to stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.Threshold = DEBUG
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=[%p %d{ABSOLUTE} %x %t:%c:%L] - %m%n
+
+
+#log to all
+log4j.appender.all=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.all.File=./log/all.log
+log4j.appender.all.Append=true
+log4j.appender.all.Threshold = INFO
+log4j.appender.all.layout=org.apache.log4j.PatternLayout
+log4j.appender.all.layout.ConversionPattern=[%p %d{ABSOLUTE} %x %t:%c:%L] - %m%n
+
+#log to search
+log4j.appender.search=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.search.File=./log/search.log
+log4j.appender.search.Append=true
+log4j.appender.search.Threshold = INFO
+log4j.appender.search.layout=org.apache.log4j.PatternLayout
+log4j.appender.search.layout.ConversionPattern=[%p %d{ABSOLUTE} %x %t:%c:%L] - %m%n
