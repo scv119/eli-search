@@ -1,4 +1,25 @@
     <%
+    Function Base64Encode(psText)
+         dim oXml, oStream, oNode
+         Set oXml =Server.CreateObject("MSXML2.DOMDocument")
+             Set oStream =Server.CreateObject("ADODB.Stream")
+                 Set oNode =oXml.CreateElement("tmpNode")
+                     oNode.dataType ="bin.base64"
+                     oStream.Charset ="gb2312"
+                     oStream.Type =2
+                     If oStream.state =0 Then oStream.Open()
+                     oStream.WriteText(psText)
+                     oStream.Position =0
+                     oStream.Type =1
+                     oNode.nodeTypedValue =oStream.Read(-1)
+                     oStream.Close()
+                     Base64Encode =oNode.Text
+                 Set oNode =Nothing
+             Set oStream =Nothing
+         Set oXml =Nothing
+    End Function
+
+
         Dim conn
         Dim rs
         Dim sql
@@ -15,7 +36,7 @@
         set rtype = Request.QueryString("type")
         set para1 = Request.QueryString("since")
         set para2 = Request.QueryString("limit")
-        if NOT Request.QueryString("token")="" then
+        if NOT Request.QueryString("token")="ksdf3pikj13asdf" then
             Response.End
         end if
         if (NOT IsNumeric(para1)) OR (NOT IsNumeric(para2)) then
@@ -47,7 +68,7 @@
             Response.Write(""""&x.name&"""")
             Response.Write(" : ")
             if VarType(x.value) = 8 then
-                Response.Write(""""&Replace(x.value,"""","'")&"""")
+                Response.Write(""""&Base64Encode(x.value)&"""")
             else
                 Response.Write(""""&x.value&"""")
             end if
@@ -60,5 +81,3 @@
         rs.close
         conn.close
     %>
-
-
