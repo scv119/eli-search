@@ -9,7 +9,7 @@ tmp/
 
 *.class
 
-./python/config/__init__.pyt
+python/config/__init__.py
 python/bin/
 python/eggs/
 python/parts/
