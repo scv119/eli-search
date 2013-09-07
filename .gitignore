@@ -8,3 +8,10 @@ out/
 tmp/
 
 *.class
+
+./python/config/config.py
+./python/bin
+./python/eggs
+./python/parts
+./python/elin_sync.egg-info
+./python/develop-eggs
