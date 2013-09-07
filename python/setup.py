@@ -9,11 +9,12 @@ setup(
     author = '',
     packages = ["elin","config"],
     install_requires = ['setuptools',
+                        'BeautifulSoup',
                         'tornado',
                         'redis',
                         ],
     entry_points="""
     [console_scripts]
-    sync-daemon=elin.app:main
+    sync-daemon=elin.app.daemon:main
     """,
 )

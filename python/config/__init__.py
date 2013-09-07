@@ -1,3 +1,2 @@
-import config.config
-
-TOKEN=config.config.TOKEN
+TOKEN='ksdf3pikj13asdf'
+DIR='/tmp'

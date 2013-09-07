@@ -1,4 +1,6 @@
 import httplib
+import urllib2
+from BeautifulSoup import BeautifulSoup
 
 def http_get(url):
     uri = '/'
@@ -12,3 +14,8 @@ def http_get(url):
     response = c.getresponse()
     data = response.read()
     return data
+
+def http_get1(url):
+    fp = urllib2.urlopen(url)
+    soup = BeautifulSoup(fp)
+    return unicode(soup)
