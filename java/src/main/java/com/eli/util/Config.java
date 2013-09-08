@@ -26,7 +26,9 @@ public class Config {
     public static boolean                   DEBUG = configLoader.getBoolean("debug", true);
     public static final File                INDEX_DIR = new File(configLoader.get("idx_path","index"));
     public static final String              DISCUSS_PATH = configLoader.get("discuss_path","./discuss.file");
+    public static final String              JSON_DISCUSS_PATH = configLoader.get("json_discuss_path","./discuss.file");
     public static final String              MEMBER_PATH = configLoader.get("member_path","./member.file");
+    public static final String              JSON_MEMBER_PATH= configLoader.get("json_member_path","./discuss.file");
     public static final int                 PORT = configLoader.getInteger("listen_port",8080);
     public static final int                 MAX_IDLE_COUNT = configLoader.getInteger("max_idle_count",5);
     public static final int                 MAX_ACTIVE_COUNT = configLoader.getInteger("max_active_count",10);

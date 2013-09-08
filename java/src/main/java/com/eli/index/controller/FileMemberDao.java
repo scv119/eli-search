@@ -1,7 +1,9 @@
 package com.eli.index.controller;
 
+import com.eli.util.Common;
 import com.eli.util.Config;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
@@ -40,6 +42,32 @@ public class FileMemberDao implements MemberDao {
                 br.close();
             } catch (IOException e) {}
         }
+
+
+        try {
+            br=new BufferedReader(new InputStreamReader(new FileInputStream(Config.JSON_MEMBER_PATH), "GBK"));
+            String line;
+            long applyTime = 0;
+            while ((line = br.readLine()) != null) {
+                JSONObject json = new JSONObject(line);
+                Member member = new Member();
+                member.setId(Integer.parseInt((String)json.get("ID")));
+                member.setName(Common.decodeElin((String)json.get("UserName")));
+                if (Long.parseLong((String)json.get("ApplyTime")) < applyTime)
+                    continue;
+                applyTime = Long.parseLong((String)json.get("ApplyTime"));
+                ret.add(member);
+            }
+        } catch(Exception e) {
+            LOG.error(e);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {}
+        }
+
+
+
         return ret;
     }
 }

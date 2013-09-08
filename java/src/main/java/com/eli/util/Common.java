@@ -10,6 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -279,6 +280,24 @@ public class Common {
     }
 
 
+    static BASE64Decoder decoder = new BASE64Decoder();
+    public static String decode(String base64) {
+        String ret = "";
+        try {
+            byte[] decodeBytes = decoder.decodeBuffer(base64);
+            ret = new String(decodeBytes, Charset.forName("gbk"));
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return ret;
+        }
+        return ret;
+    }
+
+    public static String decodeElin(String base64) {
+        base64 = base64.replaceAll("%", "\r");
+        return decode(base64);
+    }
+
     public static void main(String args[]) {
 //        String ret = decodeCookie("q_c0", "YjM2ZTdjN2RjMjkwNzgzZjdmNTBlNjA2ZTZiOTRmNTd8R3JsTmNIOVhLVGxJWU9oRQ==|" +
 //                "1345879337|ab2db45bf03e2e08f9e06a6215930b2bce7a4b8a");
@@ -293,6 +312,8 @@ public class Common {
         for (String ss : list) {
             System.out.println(ss);
         }
+
+        System.out.println(decodeElin("0tTPwtL908PXqLzStcS21Luwo7oNCsj91MK35zqyu8Tct9bA4LXE19Sx1daiKFBERKGqTk9T%KcrH1PXR+bXE0rvW1rHtz9Y/DQqhoaGh197QobH4OrHIyOfSu7j20KG6oizL+zHL6tfz09LE%3L3QsNaw1sLowugsMcvqsOvSsrvh09DS4sq2tcS90LDWsNYs0rK74bHttO/X1Ly6tcTQ6Mfz%LKGwztLP68nPvdbN5qGxLLWry/u7+bG+yc+yu8TcvfjQ0NK7uPa72LrPtcS21LuwLMv71NrT%17b51LC74bOqtvm46Cy1q7TTwLSyu7vhw+jK9tPXtvnUsLeiyfq1xMrCx+mho8v70rK63MnZ%08PKs9a41rjO7yy74bK7u+HTw8qz1rjWuM7vLMrHztLDx9TnxtrJuLLp0ru49rrc1tjSqrXE%serXvKGju7nT0MDPyqa3tNOmy/u8x9LkwabHv7WrubXNqLLuLNK7uPbIy83moaPO0sPHvq25%/TO49tTCssXE3Mi31e/L+8rHUEREoapOT1Ohow0KyP3UwrfnOsT61PXR+b+0tP2hsNfUsdXW%orK7v8nWztP6obHV4tK7udu14z8NCqGhoaHX3tChsfg6ueO3urXE19Sx1dai09C63Lbgt9bA%4CzH4dDNt8e15NDN0NS1xNfUsdXWorK7tObU2tbOsrvWztP6tcTOysziLMv7w8exvsntvs3U%2r2hyKvIy7Wx1tAs1rvKx8v7w8e1xNDQzqrT0NCpudbS7CyyosfStNPX1LHV1qK1xMj9zqzR%0L6/wLS/tCzL5tfFyrG85LXEseS7ryzSu9Cpt8e15NDN0NTX1LHV1qLIy8q/tcS51tLs0NDO%qrvhy+nGrLuvLNPQ0Km51tLs0NDOqsO709DByyzT0NCpu7mxo8H018Whow=="));
 
         System.out.println("asdf-asdfasdf".replaceAll("-", " "));
 
