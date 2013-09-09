@@ -148,7 +148,7 @@ public class DocumentSupport {
             ret = new NumericField(fieldName, org.apache.lucene.document.Field.Store.YES, true).setIntValue((Integer)fieldContent);
         }
         else {
-            ret = new org.apache.lucene.document.Field(fieldName, fieldContent.toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.ANALYZED);
+            ret = new org.apache.lucene.document.Field(fieldName, fieldContent.toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.WITH_POSITIONS_OFFSETS);
         }
 
         if(ret != null) ret.setBoost(boost);

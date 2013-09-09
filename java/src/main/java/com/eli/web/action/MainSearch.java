@@ -14,7 +14,9 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermPositionVector;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
@@ -136,8 +138,12 @@ public class MainSearch extends BasicAction {
                     if  (content == null)
                         content = "";
 
-                    String hContent = getFragmentsWithHighlightedTerms(analyzer, query, "content.NGRAM", content,10, 70);
-                    String hTitle  = getFragmentsWithHighlightedTerms(analyzer, query, "title.NGRAM", title, 10, 200);
+                    TermPositionVector termFreqVector = (TermPositionVector)agent.getIndexReader().getTermFreqVector(i, "content.NGRAM");
+                    String hContent = getFragmentsWithHighlightedTerms(termFreqVector, analyzer, query, "content.NGRAM", content,10, 70);
+
+                    termFreqVector = (TermPositionVector)agent.getIndexReader().getTermFreqVector(i, "title.NGRAM");
+                    String hTitle  = getFragmentsWithHighlightedTerms(termFreqVector, analyzer, query, "title.NGRAM", title, 10, 200);
+
                     logger.info(hTitle);
                     logger.info(hContent);
 
@@ -195,12 +201,16 @@ public class MainSearch extends BasicAction {
 
     }
 
-    public static String getFragmentsWithHighlightedTerms(Analyzer analyzer, Query query,
+    public static String getFragmentsWithHighlightedTerms(TermPositionVector vector, Analyzer analyzer, Query query,
                                                      String fieldName, String fieldContents, int fragmentNumber, int fragmentSize) throws IOException, InvalidTokenOffsetsException {
 
         fieldContents = StringUtils.replaceEach(fieldContents, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
     
-        TokenStream stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
+        TokenStream stream = null;
+        if (vector != null)
+            stream = TokenSources.getTokenStream(vector);
+        else
+            stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer, fragmentSize);
 
