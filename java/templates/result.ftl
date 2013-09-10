@@ -67,7 +67,7 @@ $(document).ready(function(){
       response( $.map( result, function( eachElement ) {
        return {
         label : eachElement,
-        value : eachElement,
+        value : eachElement
        }
       }));
      },
@@ -114,10 +114,10 @@ a:focus{
 .cutoff{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 .search-wrap{width:760px;_margin-top:-15px;text-align: center;}
 .search-form{padding-left:25px;}
-.search-input{width: 300px;position: relative;float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);background: url(img/search_icon.png) no-repeat 8px 11px;}
+.search-input{width: 300px;height: 36px;position: relative;float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);background: url(img/search_icon.png) no-repeat 8px 11px;}
 .search-input input{width:270px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;margin-left:28px;vertical-align: top;}
-.search-author{position: relative;width:190px;margin-left:10px; margin-right:10px; float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);}
-.search-author input {width:150px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;vertical-align: top;}
+.search-author{position: relative;width:190px;height:36px;margin-left:10px; margin-right:10px; float: left;*display: inline;*zoom:1;border:1px solid rgb(88, 139, 194);}
+.search-author input {float:left;width:140px;border:0 none;padding:3px 0;padding:9px 0 2px 0px\0;*padding:8px 0 2px 0px;margin-left:10px;height:30px;height:25px\0;*height:24px;_height:24px;line-height: 25px;font: 16px arial;vertical-align: top;}
 .advance-input {width:300px;height:30px;margin-top:5px;margin-right:20px;font:16px arial;}
 .advance-check {width:300px;height:30px;margin-top:5px;font:16px arial;}
 #adv-div{width:618px;border:1px solid rgb(204, 204, 204);margin-top:10px;line-height:25px;padding-left:8px;height:125px}
