@@ -17,6 +17,7 @@ public class MultiNRTSearcherAgent {
 
     private IndexSearcher[] searchers;
     private IndexSearcher   searcher;
+    private IndexReader     reader;
     private ZhihuNRTManager nrtManger;
 
 
@@ -26,7 +27,8 @@ public class MultiNRTSearcherAgent {
         IndexReader[] readers = new IndexReader[searchers.length];
         for(int i = 0 ; i < searchers.length ; i ++)
             readers[i] = searchers[i].getIndexReader();
-        this.searcher = new IndexSearcher(new MultiReader(readers));
+        this.reader = new MultiReader(readers);
+        this.searcher = new IndexSearcher(reader);
     }
 
     public ZhihuNRTManager getNrtManger(){
@@ -44,6 +46,6 @@ public class MultiNRTSearcherAgent {
     }
 
     public IndexReader getIndexReader(){
-        return this.searcher.getIndexReader();
+        return this.reader;
     }
 }
