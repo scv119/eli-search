@@ -247,8 +247,8 @@ a:focus{
 		<div class="item cf">
 		      <img src="${item["avatar"]}" alt="" class="fl avatar"/>
 		      <div class="fl">
-			<p><a href="${item["url"]}" class="search-red">${item["title"]}</a></p>
-			<p><a href="${item["url"]}" class="link-green">${item["url"]}</a></p>
+			<p><a href="${item["url"]}" target="_blank" class="search-red">${item["title"]}</a></p>
+			<p><a href="${item["url"]}" target="_blank" class="link-green">${item["url"]}</a></p>
 			<p class="user-type">以琳用户</p>
 		      </div>
 		</div>	
