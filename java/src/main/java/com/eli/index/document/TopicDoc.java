@@ -42,8 +42,8 @@ public class TopicDoc extends DocumentSupport {
     @Override
     public Query toDeleteQuery() {
         BooleanQuery ret = new BooleanQuery();
-        Query typeQuery = new TermQuery(new Term("type.NONE", type));
-        Query idQuery = new TermQuery(new Term("id.NONE", this.id));
+        Query typeQuery = new TermQuery(new Term("type.None", type));
+        Query idQuery = new TermQuery(new Term("id.None", this.id));
         ret.add(typeQuery, BooleanClause.Occur.MUST);
         ret.add(idQuery, BooleanClause.Occur.MUST);
         return ret;

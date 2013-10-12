@@ -53,6 +53,10 @@ public class MainSearch extends BasicAction {
         super.put("total", 0);
         super.put("page", 0);
 
+        String phraseToken = token;
+        if (token.trim().indexOf(" ") < 0)
+            phraseToken = "\"" + token + "\"";
+
         QueryParser qp = new QueryParser(Version.LUCENE_36, "content.NGRAM", analyzer);
         QueryParser qp1 = new QueryParser(Version.LUCENE_36, "title.NGRAM", analyzer);
         List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
@@ -62,8 +66,8 @@ public class MainSearch extends BasicAction {
             Query sub = new TermQuery(new Term("content.NGRAM", ""));
             Query sub1 = new TermQuery(new Term("title.NGRAM", ""));
             if (token.trim().length() != 0) {
-                sub = qp.parse(token);
-                sub1 = qp1.parse(token);
+                sub = qp.parse(phraseToken);
+                sub1 = qp1.parse(phraseToken);
             }
             Query sub2 = new TermQuery(new Term("name.None", token));
 
