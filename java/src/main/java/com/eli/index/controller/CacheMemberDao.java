@@ -23,6 +23,10 @@ public enum CacheMemberDao implements MemberDao{
     private TRIETree<Member> trieTree;
 
     private CacheMemberDao () {
+        this.reload();
+    }
+
+    public synchronized  void reload() {
         this.memberDao = new FileMemberDao();
         List<Member> members = this.memberDao.getMembers();
         this.memberMap = new HashMap<Integer, Member>();
