@@ -4,6 +4,7 @@ import com.eli.index.DocumentSupport;
 import com.eli.index.controller.DiscussionController;
 import com.eli.index.controller.MemberController;
 import com.eli.index.controller.TopicController;
+import com.eli.index.document.DiscussionDoc;
 import com.eli.index.document.MemberDoc;
 import com.eli.index.document.TopicDoc;
 import com.eli.index.manager.ZhihuIndexManager;
@@ -31,14 +32,11 @@ public class BuildIndex {
         try {
             logger.info("Indexing to directory '" + Config.INDEX_DIR
                     + "'...");
-            if (!ZhihuIndexManager.INSTANCE.startNewBatch())
-                return false;
+
 
             indexDiscussion();
             indexTopic();
             indexMember();
-
-            ZhihuIndexManager.INSTANCE.batchDone();
 
             Date end = new Date();
             logger.info(end.getTime() - start.getTime()
@@ -58,11 +56,13 @@ public class BuildIndex {
         int count = 0;
         Set<Integer> topicIds = controller.getTopicIds();
         for (int topicId : topicIds) {
-            List<? extends DocumentSupport>  list=  controller.getDiscussionDocs(topicId);
+            List<DiscussionDoc>  list=  controller.getDiscussionDocs(topicId);
             if (count ++ % 100 == 0)
                 logger.info(count + " topics indexed");
-            for (DocumentSupport doc :list)
-                ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
+            for (DiscussionDoc doc :list) {
+                ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
+                ZhihuIndexManager.INSTANCE.addDoc(doc);
+            }
 
         }
 
@@ -78,7 +78,8 @@ public class BuildIndex {
         for (TopicDoc doc : lists)  {
             if (count ++ % 100 == 0)
                 logger.info(count + " topics indexed");
-                ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
+                ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
+                ZhihuIndexManager.INSTANCE.addDoc(doc);
         }
 
         logger.info("indexed discussion:" + start_idx);
@@ -93,7 +94,8 @@ public class BuildIndex {
         for (MemberDoc doc : lists)  {
             if (count ++ % 100 == 0)
                 logger.info(count + " topics indexed");
-            ZhihuIndexManager.INSTANCE.addBatchDoc(doc);
+            ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
+            ZhihuIndexManager.INSTANCE.addDoc(doc);
         }
 
         logger.info("indexed discussion:" + start_idx);

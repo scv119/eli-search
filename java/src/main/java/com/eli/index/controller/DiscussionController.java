@@ -42,6 +42,7 @@ public class DiscussionController {
                 doc.hits = dis.readCount;
                 doc.date = dis.date + "";
                 doc.author = dis.author;
+                doc.id = dis.id + "";
                 if (dis.topicId == dis.id) {
                     doc.setBoost(1.2f);
                     doc.setSeqOfThread(0);

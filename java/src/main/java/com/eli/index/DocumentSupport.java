@@ -2,6 +2,7 @@ package com.eli.index;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.*;
+import org.apache.lucene.search.Query;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,7 +24,7 @@ import java.util.Map;
  *
  *
  */
-public class DocumentSupport {
+public abstract class DocumentSupport {
     private static final Logger logger = Logger.getLogger(DocumentSupport.class);
     private float boost = 1.0f;
     private static Map<String, Class<? extends DocumentSupport>> childMap =
@@ -49,6 +50,8 @@ public class DocumentSupport {
     public Document toDocument() {
         return buildDocument(this);
     }
+
+    public abstract Query toDeleteQuery();
 
     public static DocumentSupport parseDocument(Document doc) {
         Class<? extends DocumentSupport> clazz = childMap.get(doc.get("type.None"));

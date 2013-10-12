@@ -22,7 +22,6 @@ public enum ZhihuIndexManager {
     private static final Logger logger = Logger.getLogger(ZhihuIndexManager.class);
 
     ZhihuIndex currentIndex;
-    ZhihuIndex futureIndex;
 
     ZhihuIndexManager() {
         File files[] = Config.INDEX_DIR.listFiles();
@@ -38,27 +37,9 @@ public enum ZhihuIndexManager {
         }
         if(maxVersion != 0) {
             currentIndex = new ZhihuIndex(maxVersion);
-            currentIndex.prepareDone();
         }
     }
 
-    public synchronized boolean startNewBatch() {
-        if(futureIndex != null)
-            return false;
-        futureIndex = new ZhihuIndex(TimeUtil.getLongTime());
-        return true;
-    }
-
-    public synchronized boolean batchDone() {
-        if(futureIndex == null || futureIndex.getStatus() != ZhihuIndex.Status.PREPARE)
-            return false;
-        futureIndex.prepareDone();
-        if(currentIndex != null)
-            currentIndex.stop();
-        currentIndex = futureIndex;
-        futureIndex = null;
-        return true;
-    }
 
     public void commitIndex() {
         synchronized (this) {
@@ -66,74 +47,27 @@ public enum ZhihuIndexManager {
                 this.currentIndex.flush();
         }
 
-        synchronized (this) {
-            if(this.futureIndex != null)
-                this.currentIndex.flush();
-        }
     }
 
 
-    public void mayRefresh() {
-        synchronized (this) {
-            if(this.currentIndex != null)
-                try {
-                    this.currentIndex.getNrtManager().maybeRefresh();
-                } catch (IOException e) {
-                    logger.error("error while refrensh", e);
-                }
-        }
-
-        synchronized (this) {
-            if(this.futureIndex != null)
-                try {
-                    this.futureIndex.getNrtManager().maybeRefresh();
-                } catch (IOException e) {
-                    logger.error("error while refrensh", e);
-                }
-        }
-    }
-
-    public boolean isBatch() {
-        if(futureIndex != null && futureIndex.getStatus() == ZhihuIndex.Status.PREPARE)
-            return true;
-        return false;
-    }
 
 
-    public void addIncrementDoc(DocumentSupport doc) {
+
+    public void addDoc(DocumentSupport doc) {
         if(doc != null)
-            this.addIncrementDoc(doc.toDocument());
+            this.addDoc(doc.toDocument());
     }
 
-    public void addIncrementDoc(Document doc) {
+    public void addDoc(Document doc) {
         synchronized (this) {
             if(this.currentIndex != null)
                 this.currentIndex.addDocument(doc);
         }
-
-        synchronized (this) {
-            if(this.futureIndex != null)
-                this.futureIndex.addDocument(doc);
-        }
     }
 
-    public void addBatchDoc(DocumentSupport doc) {
-        if(doc != null)
-            this.addBatchDoc(doc.toDocument());
-    }
 
-    public void addBatchDoc(Document doc) {
-        synchronized (this) {
-            if(this.futureIndex != null)
-                this.futureIndex.addDocument(doc);
-        }
-    }
 
     public void delDoc(Query query) {
-        synchronized (this) {
-            if(this.futureIndex != null)
-                this.futureIndex.deleteDocument(query);
-        }
 
         synchronized (this) {
             if(this.currentIndex != null)
@@ -172,10 +106,4 @@ public enum ZhihuIndexManager {
         return -1;
     }
 
-
-    public long futureIndexVersion() {
-        if(futureIndex != null)
-            return  futureIndex.getIndexVersion();
-        return -1;
-    }
 }

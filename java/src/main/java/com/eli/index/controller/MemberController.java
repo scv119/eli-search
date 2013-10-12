@@ -27,6 +27,7 @@ public class MemberController {
             doc.setUrl("http://new.elimautism.org/User/LookUserInfo.asp?id=" + member.getId());
             doc.setName(member.getName());
             doc.setAvatar(member.getAvatar());
+            doc.id = member.getId() + "";
             list.add(doc);
         }
         return list;
