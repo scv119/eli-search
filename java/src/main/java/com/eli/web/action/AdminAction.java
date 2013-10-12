@@ -34,11 +34,11 @@ public class AdminAction extends BasicAction {
         }
 
 
-        isRebuildIndex = ZhihuIndexManager.INSTANCE.isBatch();
+        isRebuildIndex = false;
 
         super.put("rebuildIndex", isRebuildIndex + "");
         super.put("currentVersion", ZhihuIndexManager.INSTANCE.currentIndexVersion() + "");
-        super.put("futureVersion", ZhihuIndexManager.INSTANCE.futureIndexVersion() + "");
+        super.put("futureVersion", "no");
 
         super.put("qps", Handler.getQPS() + "");
 

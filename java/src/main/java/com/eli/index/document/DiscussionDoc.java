@@ -4,6 +4,11 @@ import com.eli.index.DocumentSupport;
 import com.eli.index.IndexType;
 import com.eli.index.IField;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +24,16 @@ public class DiscussionDoc extends DocumentSupport {
 
     public DiscussionDoc(Document doc) {
         super(doc);
+    }
+
+    @Override
+    public Query toDeleteQuery() {
+        BooleanQuery ret = new BooleanQuery();
+        Query typeQuery = new TermQuery(new Term("type.NONE", type));
+        Query idQuery = new TermQuery(new Term("id.NONE", this.id));
+        ret.add(typeQuery, BooleanClause.Occur.MUST);
+        ret.add(idQuery, BooleanClause.Occur.MUST);
+        return ret;
     }
 
     @IField(indexTypes = {IndexType.None})
@@ -45,6 +60,17 @@ public class DiscussionDoc extends DocumentSupport {
     @IField(indexTypes = {IndexType.None})
     public int seqOfThread;
 
+    @IField(indexTypes = {IndexType.None})
+    public String id = "";
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getContent() {
         return content;
     }
@@ -100,4 +126,5 @@ public class DiscussionDoc extends DocumentSupport {
     public void setSeqOfThread(int seqOfThread) {
         this.seqOfThread = seqOfThread;
     }
+
 }

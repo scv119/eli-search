@@ -12,6 +12,5 @@ import com.eli.index.offline.BuildIndex;
 public class NewOfflineBuildIndex {
     public static void main(String args[]){
         BuildIndex.start();
-        ZhihuNRTManager.stopPeriodRefresh();
     }
 }

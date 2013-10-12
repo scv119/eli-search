@@ -67,6 +67,7 @@ public class TopicController {
             doc.setTitle(CONTENT[idx++]);
             doc.setContent(CONTENT[idx++]);
             doc.setUrl(CONTENT[idx++]);
+            doc.id = idx + "";
             ret.add(doc);
         }
         return ret;
