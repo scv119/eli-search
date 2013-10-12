@@ -37,6 +37,7 @@ public class BuildIndex {
             indexDiscussion();
             indexTopic();
             indexMember();
+            ZhihuIndexManager.INSTANCE.commitIndex();
 
             Date end = new Date();
             logger.info(end.getTime() - start.getTime()

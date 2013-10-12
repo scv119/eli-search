@@ -9,6 +9,7 @@ import org.apache.lucene.search.Query;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,6 +38,8 @@ public enum ZhihuIndexManager {
         }
         if(maxVersion != 0) {
             currentIndex = new ZhihuIndex(maxVersion);
+        }  else {
+            currentIndex = new ZhihuIndex((new Date()).getTime());
         }
     }
 
