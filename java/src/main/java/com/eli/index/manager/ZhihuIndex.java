@@ -69,7 +69,7 @@ public class ZhihuIndex {
 
         try{
 
-                logger.info("indexing documents:"+doc.toString());
+          //      logger.info("indexing documents:"+doc.toString());
                 iWriter.addDocument(doc);
                 logger.info("indexing done");
         }catch (IOException e) {
@@ -81,7 +81,7 @@ public class ZhihuIndex {
 
 
         try{
-            logger.info("delete from index:" + query);
+       //     logger.info("delete from index:" + query);
             iWriter.deleteDocuments(query);
             logger.info("delete done:"+query);
         }catch (IOException e) {
