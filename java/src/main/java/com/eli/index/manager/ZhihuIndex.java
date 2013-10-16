@@ -8,6 +8,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.MMapDirectory;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,8 @@ public class ZhihuIndex {
         this.indexParentDir = Config.INDEX_DIR;
         this.indexDir = new File(this.indexParentDir.getAbsolutePath() + File.separator + indexVersion);
         try{
-            directory = FSDirectory.open(indexDir);
+            directory = MMapDirectory.open(indexDir);
+            //directory = FSDirectory.open(indexDir);
             iWriter   = new IndexWriter(directory, Config.getConfig());
             nrtManager = new ZhihuNRTManager(iWriter);
         } catch (IOException e) {

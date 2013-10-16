@@ -39,9 +39,11 @@ public class MainSearch extends BasicAction {
     protected void execute() throws IOException {
         String token = super.getParam("q", "");
         String avatar_url = null;
+        Date start = null;
+        Date end   = null;
         int offset  = Integer.parseInt(super.getParam("offset", "0"));
         int limit  = Integer.parseInt(super.getParam("limit", "10"));
-	    int _type   = Integer.parseInt(super.getParam("type", "0"));
+	      int _type   = Integer.parseInt(super.getParam("type", "0"));
         String adv = super.getParam("adv", "no");
         String author = super.getParam("author", "").trim();
         String reply  = super.getParam("reply", "no");
@@ -49,7 +51,7 @@ public class MainSearch extends BasicAction {
         super.put("query", token);
         super.put("offset", offset);
         super.put("limit", limit);
-    	super.put("type", _type);
+    	  super.put("type", _type);
         super.put("total", 0);
         super.put("page", 0);
 
@@ -113,8 +115,11 @@ public class MainSearch extends BasicAction {
                 query.add(sub3, BooleanClause.Occur.MUST);
                 query.add(sub4, BooleanClause.Occur.MUST);
             }
-
+            start = new Date();
             TopDocs hits = searcher.search(query, offset + limit);
+            end = new Date();
+            logger.info("search time:" + (end.getTime() - start.getTime()));
+
             QueryScorer scorer = new QueryScorer(query);
             Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<span class=\"search-red\">", "</span>"), new SimpleHTMLEncoder(), scorer);
             highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 60));
@@ -142,15 +147,15 @@ public class MainSearch extends BasicAction {
                     if  (content == null)
                         content = "";
 
+
+                    start = new Date();
                     TermPositionVector termFreqVector = (TermPositionVector)agent.getIndexReader().getTermFreqVector(i, "content.NGRAM");
                     String hContent = getFragmentsWithHighlightedTerms(termFreqVector, analyzer, query, "content.NGRAM", content,10, 70);
 
                     termFreqVector = (TermPositionVector)agent.getIndexReader().getTermFreqVector(i, "title.NGRAM");
                     String hTitle  = getFragmentsWithHighlightedTerms(termFreqVector, analyzer, query, "title.NGRAM", title, 10, 200);
-
-                    logger.info(hTitle);
-                    logger.info(hContent);
-
+                    end = new Date();
+                    logger.info("highlit time:" + (end.getTime() - start.getTime()));
 
                     if (hTitle == null && title.length() == 0)
                         hTitle = "无标题";
