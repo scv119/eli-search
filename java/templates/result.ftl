@@ -160,7 +160,7 @@ a:focus{
 .item .search-red{color:#ff6633;}
 .item a.link-green{color:#33cc00;font-size: 13px}
 .user-type{color:rgb(111, 111, 111);font-size: 13px}
-.search-art{width:34%;height:42px;font-size: 13px;color:#535353;overflow: hidden;}
+.search-art{width:34%;height:60px;font-size: 13px;color:#535353;overflow: hidden;}
 .search-detail span{margin:0 5px 0 0px;color:#535353;font-size: 14px}
 .page{margin:10px 0;}
 .page a{padding:5px;color:#3399cc;}
