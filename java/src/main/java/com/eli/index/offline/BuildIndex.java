@@ -57,12 +57,13 @@ public class BuildIndex {
         Set<Integer> topicIds = controller.getTopicIds();
         for (int topicId : topicIds) {
             List<DiscussionDoc>  list=  controller.getDiscussionDocs(topicId);
-            if (count ++ % 100 == 0)
-                logger.info(count + " topics indexed");
+            if (count ++ % 10 == 0)
+                logger.info(count + " discussion topic indexed");
             for (DiscussionDoc doc :list) {
                 ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
                 ZhihuIndexManager.INSTANCE.addDoc(doc);
             }
+            ZhihuIndexManager.INSTANCE.commit();
 
         }
 
@@ -76,12 +77,13 @@ public class BuildIndex {
         int count = 0;
         List<TopicDoc> lists = controller.getTopics();
         for (TopicDoc doc : lists)  {
-            if (count ++ % 100 == 0)
+            if (count ++ % 1000 == 0)
                 logger.info(count + " topics indexed");
                 ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
                 ZhihuIndexManager.INSTANCE.addDoc(doc);
         }
 
+        ZhihuIndexManager.INSTANCE.commit();
         logger.info("indexed discussion:" + start_idx);
 
     }
@@ -92,12 +94,13 @@ public class BuildIndex {
         int count = 0;
         List<MemberDoc> lists = controller.getMembers();
         for (MemberDoc doc : lists)  {
-            if (count ++ % 100 == 0)
-                logger.info(count + " topics indexed");
+            if (count ++ % 1000 == 0)
+                logger.info(count + " members indexed");
             ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
             ZhihuIndexManager.INSTANCE.addDoc(doc);
         }
 
+        ZhihuIndexManager.INSTANCE.commit();
         logger.info("indexed discussion:" + start_idx);
 
     }

@@ -52,6 +52,14 @@ public enum ZhihuIndexManager {
 
     }
 
+    public void commit() {
+        synchronized (this) {
+            if(this.currentIndex != null)
+                this.currentIndex.commit();
+        }
+
+    }
+
 
 
 

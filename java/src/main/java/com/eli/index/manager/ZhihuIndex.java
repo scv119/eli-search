@@ -82,7 +82,7 @@ public class ZhihuIndex {
 
           //      logger.info("indexing documents:"+doc.toString());
                 ramWriter.addDocument(doc);
-                logger.info("indexing done");
+   //             logger.info("indexing done");
         }catch (IOException e) {
             logger.error(e);
         }
@@ -94,7 +94,7 @@ public class ZhihuIndex {
         try{
        //     logger.info("delete from index:" + query);
             ramWriter.deleteDocuments(query);
-            logger.info("delete done:"+query);
+   //         logger.info("delete done:"+query);
         }catch (IOException e) {
             logger.error(e);
         }
@@ -102,12 +102,7 @@ public class ZhihuIndex {
     }
 
 
-    public void flush()  {
-        this.commit();
-    }
-
-
-    private synchronized void  commit() {
+    public synchronized void flush()  {
         try{
             ramWriter.commit();
             Directory directory = MMapDirectory.open(indexDir);
@@ -119,6 +114,15 @@ public class ZhihuIndex {
             indexWriter.commit();
             indexWriter.close();
             logger.info("save index finished");
+        }catch (IOException e) {
+            logger.error(e);
+        }
+    }
+
+
+    public  void  commit() {
+        try{
+            ramWriter.commit();
         }catch (IOException e) {
             logger.error(e);
         }
