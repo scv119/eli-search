@@ -90,4 +90,18 @@ public class ZhihuNRTManager {
         scheduledExecutorService.shutdown();
     }
 
+    public void close() {
+        for (NRTManager manager:managers) {
+            try {
+                manager.close();
+            } catch (IOException e) {
+                logger.error("NRT close error", e);
+            }
+        }
+
+        synchronized (refreshManagers) {
+            refreshManagers.remove(this);
+        }
+    }
+
 }

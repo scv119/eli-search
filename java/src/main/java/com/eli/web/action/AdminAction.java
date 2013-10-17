@@ -30,7 +30,7 @@ public class AdminAction extends BasicAction {
         }
 
         if ((super.getParam("commit", "")).equals("true")) {
-            ZhihuIndexManager.INSTANCE.flushToDisk();
+            ZhihuIndexManager.INSTANCE.finishBuild();
         }
 
 

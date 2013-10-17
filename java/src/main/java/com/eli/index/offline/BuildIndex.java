@@ -31,12 +31,15 @@ public class BuildIndex {
         try {
             logger.info("Indexing to directory '" + Config.INDEX_DIR
                     + "'...");
-
-
+            if (ZhihuIndexManager.INSTANCE.isIndexing()) {
+                logger.error("current building!");
+                return false;
+            }
+            ZhihuIndexManager.INSTANCE.startBuild();
             indexDiscussion();
             indexTopic();
             indexMember();
-            ZhihuIndexManager.INSTANCE.flushToDisk();
+            ZhihuIndexManager.INSTANCE.finishBuild();
 
             Date end = new Date();
             logger.info(end.getTime() - start.getTime()
@@ -45,6 +48,7 @@ public class BuildIndex {
         } catch (IOException e) {
             logger.info(" caught a " + e.getClass()
                     + "\n with message: " + e.getMessage());
+            return false;
         }
 
         return true;
@@ -60,10 +64,8 @@ public class BuildIndex {
             if (count ++ % 10 == 0)
                 logger.info(count + " discussion topic indexed");
             for (DiscussionDoc doc :list) {
-                ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
                 ZhihuIndexManager.INSTANCE.addDoc(doc);
             }
-            ZhihuIndexManager.INSTANCE.commit();
 
         }
 
@@ -79,11 +81,9 @@ public class BuildIndex {
         for (TopicDoc doc : lists)  {
             if (count ++ % 1000 == 0)
                 logger.info(count + " topics indexed");
-                ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
                 ZhihuIndexManager.INSTANCE.addDoc(doc);
         }
 
-        ZhihuIndexManager.INSTANCE.commit();
         logger.info("indexed discussion:" + start_idx);
 
     }
@@ -96,11 +96,9 @@ public class BuildIndex {
         for (MemberDoc doc : lists)  {
             if (count ++ % 1000 == 0)
                 logger.info(count + " members indexed");
-            ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
             ZhihuIndexManager.INSTANCE.addDoc(doc);
         }
 
-        ZhihuIndexManager.INSTANCE.commit();
         logger.info("indexed discussion:" + start_idx);
 
     }

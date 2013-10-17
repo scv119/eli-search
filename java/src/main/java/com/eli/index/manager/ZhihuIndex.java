@@ -14,6 +14,9 @@ import org.apache.lucene.store.RAMDirectory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,6 +37,7 @@ public class ZhihuIndex {
     private IndexWriter ramWriter;
 
     private ZhihuNRTManager nrtManager;
+    private AtomicBoolean isIndexing;
 
 
     private File indexParentDir;
@@ -55,13 +59,41 @@ public class ZhihuIndex {
             directory.close();
 
             nrtManager = new ZhihuNRTManager(ramWriter);
+            isIndexing = new AtomicBoolean();
+            isIndexing.set(false);
         } catch (IOException e) {
             logger.error("failed to open index directory " + indexDir, e);
         }
     }
 
+    public synchronized void startBuildIndex() {
+        isIndexing.set(true);
+        nrtManager.close();
+        nrtManager = null;
+
+        try {
+            ramWriter.close();
+        } catch (IOException e) {
+            logger.error("failed to close ramWriter", e);
+        }
+
+        try {
+            ramDirectory.close();
+        } catch (IOException e) {
+            logger.error("failed to close ramDirectory", e);
+        }
+        ramDirectory = new RAMDirectory();
+        try{
+            ramWriter = new IndexWriter(ramDirectory, Config.getConfig());
+            nrtManager = new ZhihuNRTManager(ramWriter);
+        } catch (IOException e) {
+            logger.error("failed to open index directory " + indexDir, e);
+        }
+    }
+
+
     public ZhihuNRTManager getNrtManager() {
-        return nrtManager;
+            return nrtManager;
     }
 
 
@@ -70,13 +102,13 @@ public class ZhihuIndex {
         return indexVersion;
     }
 
-    public void addDocument(DocumentSupport doc)  {
+    public synchronized void addDocument(DocumentSupport doc)  {
         if(doc != null)
             addDocument(doc.toDocument());
     }
 
 
-    public void addDocument(Document doc)  {
+    public synchronized void addDocument(Document doc)  {
 
         try{
 
@@ -88,7 +120,7 @@ public class ZhihuIndex {
         }
     }
 
-    public void deleteDocument(Query query){
+    public synchronized void deleteDocument(Query query){
 
 
         try{
@@ -102,7 +134,7 @@ public class ZhihuIndex {
     }
 
 
-    public synchronized void flush()  {
+    public synchronized void finishBuildIndex()  {
         try{
             ramWriter.commit();
             Directory directory = MMapDirectory.open(indexDir);
@@ -114,13 +146,14 @@ public class ZhihuIndex {
             indexWriter.commit();
             indexWriter.close();
             logger.info("save index finished");
+            isIndexing.set(false);
         }catch (IOException e) {
             logger.error(e);
         }
     }
 
 
-    public  void  commit() {
+    public synchronized void  commit() {
         try{
             ramWriter.commit();
         }catch (IOException e) {
@@ -128,12 +161,7 @@ public class ZhihuIndex {
         }
     }
 
-    public void stop() {
-        try{
-            ramWriter.close();
-        }catch (IOException e) {
-            logger.error(e);
-        }
+    public boolean getIsIndexing() {
+        return isIndexing.get();
     }
-
 }

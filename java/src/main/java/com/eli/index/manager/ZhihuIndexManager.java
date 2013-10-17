@@ -2,7 +2,6 @@ package com.eli.index.manager;
 
 import com.eli.index.DocumentSupport;
 import com.eli.util.Config;
-import com.eli.util.TimeUtil;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Query;
@@ -20,8 +19,8 @@ import java.util.Date;
  */
 public enum ZhihuIndexManager {
     INSTANCE;
-    private static final Logger logger = Logger.getLogger(ZhihuIndexManager.class);
 
+    final Logger logger = Logger.getLogger(ZhihuIndexManager.class);
     ZhihuIndex currentIndex;
 
     ZhihuIndexManager() {
@@ -34,6 +33,7 @@ public enum ZhihuIndexManager {
                 if(version > maxVersion)
                     maxVersion = version;
             } catch (Exception e) {
+                logger.error(e);
             }
         }
         if(maxVersion != 0) {
@@ -44,10 +44,18 @@ public enum ZhihuIndexManager {
     }
 
 
-    public void flushToDisk() {
+    public void startBuild() {
         synchronized (this) {
             if(this.currentIndex != null)
-                this.currentIndex.flush();
+                this.currentIndex.startBuildIndex();
+        }
+
+    }
+
+    public void finishBuild() {
+        synchronized (this) {
+            if(this.currentIndex != null)
+                this.currentIndex.finishBuildIndex();
         }
 
     }
@@ -58,6 +66,14 @@ public enum ZhihuIndexManager {
                 this.currentIndex.commit();
         }
 
+    }
+
+    public boolean  isIndexing() {
+        synchronized (this) {
+            if(this.currentIndex != null && this.currentIndex.getIsIndexing())
+                return true;
+            return false;
+        }
     }
 
 

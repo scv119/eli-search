@@ -62,8 +62,9 @@ public class MainSearch extends BasicAction {
         QueryParser qp = new QueryParser(Version.LUCENE_36, "content.NGRAM", analyzer);
         QueryParser qp1 = new QueryParser(Version.LUCENE_36, "title.NGRAM", analyzer);
         List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
-        MultiNRTSearcherAgent agent = ZhihuIndexManager.INSTANCE.acquire();
+        MultiNRTSearcherAgent agent = null;
         try{
+            agent = ZhihuIndexManager.INSTANCE.acquire();
             IndexSearcher searcher = agent.getSearcher();
             Query sub = new TermQuery(new Term("content.NGRAM", ""));
             Query sub1 = new TermQuery(new Term("title.NGRAM", ""));
@@ -197,10 +198,11 @@ public class MainSearch extends BasicAction {
                     map.put("avatar", avatar_url);
                 ret.add(map);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.error(e);
         } finally {
-            ZhihuIndexManager.INSTANCE.release(agent);
+            if (agent != null)
+                ZhihuIndexManager.INSTANCE.release(agent);
         }
 
         super.put("reply", reply);
