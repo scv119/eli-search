@@ -64,6 +64,7 @@ public class BuildIndex {
                 ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
                 ZhihuIndexManager.INSTANCE.addDoc(doc);
             }
+            ZhihuIndexManager.INSTANCE.commitIndex();
 
         }
 
