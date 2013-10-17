@@ -1,6 +1,5 @@
 package com.eli.index.offline;
 
-import com.eli.index.DocumentSupport;
 import com.eli.index.controller.DiscussionController;
 import com.eli.index.controller.MemberController;
 import com.eli.index.controller.TopicController;
@@ -37,7 +36,7 @@ public class BuildIndex {
             indexDiscussion();
             indexTopic();
             indexMember();
-            ZhihuIndexManager.INSTANCE.commitIndex();
+            ZhihuIndexManager.INSTANCE.flushToDisk();
 
             Date end = new Date();
             logger.info(end.getTime() - start.getTime()
@@ -64,7 +63,6 @@ public class BuildIndex {
                 ZhihuIndexManager.INSTANCE.delDoc(doc.toDeleteQuery());
                 ZhihuIndexManager.INSTANCE.addDoc(doc);
             }
-            ZhihuIndexManager.INSTANCE.commitIndex();
 
         }
 

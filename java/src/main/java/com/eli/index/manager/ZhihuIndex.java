@@ -5,6 +5,7 @@ import com.eli.util.Config;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -27,10 +28,9 @@ public class ZhihuIndex {
 
     private static final Logger logger = Logger.getLogger(ZhihuIndex.class);
     
-    private Directory directory;
+
     private Directory ramDirectory;
 
-    private IndexWriter iWriter;
     private IndexWriter ramWriter;
 
     private ZhihuNRTManager nrtManager;
@@ -45,14 +45,15 @@ public class ZhihuIndex {
         this.indexParentDir = Config.INDEX_DIR;
         this.indexDir = new File(this.indexParentDir.getAbsolutePath() + File.separator + indexVersion);
         try{
-            directory = MMapDirectory.open(indexDir);
+            Directory directory = MMapDirectory.open(indexDir);
             ramDirectory = new RAMDirectory();
             //directory = FSDirectory.open(indexDir);
             ramWriter = new IndexWriter(ramDirectory, Config.getConfig());
             logger.info("load index to ram");
             ramWriter.addIndexes(directory);
             logger.info("load finished");
-            iWriter   = new IndexWriter(directory, Config.getConfig());
+            directory.close();
+
             nrtManager = new ZhihuNRTManager(ramWriter);
         } catch (IOException e) {
             logger.error("failed to open index directory " + indexDir, e);
@@ -80,7 +81,6 @@ public class ZhihuIndex {
         try{
 
           //      logger.info("indexing documents:"+doc.toString());
-                iWriter.addDocument(doc);
                 ramWriter.addDocument(doc);
                 logger.info("indexing done");
         }catch (IOException e) {
@@ -93,7 +93,6 @@ public class ZhihuIndex {
 
         try{
        //     logger.info("delete from index:" + query);
-            iWriter.deleteDocuments(query);
             ramWriter.deleteDocuments(query);
             logger.info("delete done:"+query);
         }catch (IOException e) {
@@ -108,10 +107,18 @@ public class ZhihuIndex {
     }
 
 
-    private void commit() {
+    private synchronized void  commit() {
         try{
-            iWriter.commit();
             ramWriter.commit();
+            Directory directory = MMapDirectory.open(indexDir);
+            IndexWriterConfig config = Config.getConfig();
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+            logger.info("save index to disk");
+            IndexWriter indexWriter = new IndexWriter(directory, config);
+            indexWriter.addIndexes(ramDirectory);
+            indexWriter.commit();
+            indexWriter.close();
+            logger.info("save index finished");
         }catch (IOException e) {
             logger.error(e);
         }
@@ -119,7 +126,6 @@ public class ZhihuIndex {
 
     public void stop() {
         try{
-            iWriter.close();
             ramWriter.close();
         }catch (IOException e) {
             logger.error(e);

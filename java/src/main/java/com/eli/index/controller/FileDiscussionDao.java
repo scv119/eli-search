@@ -30,7 +30,7 @@ public class FileDiscussionDao implements DiscussionDao {
         int cnt = 0;
         while (true){
             String line = br.readLine();
-            if (cnt++ % 100 == 0)
+            if (cnt++ % 10000 == 0)
                 System.out.println(cnt);
             if (line != null)
                 for (int i = 0; i < line.length(); i ++) {

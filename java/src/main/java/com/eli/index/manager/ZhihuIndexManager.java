@@ -44,7 +44,7 @@ public enum ZhihuIndexManager {
     }
 
 
-    public void commitIndex() {
+    public void flushToDisk() {
         synchronized (this) {
             if(this.currentIndex != null)
                 this.currentIndex.flush();
