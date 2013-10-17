@@ -28,6 +28,7 @@ public class FileDiscussionDao implements DiscussionDao {
         List<String> tokens = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
         int cnt = 0;
+        try {
         while (true){
             String line = br.readLine();
             if (cnt++ % 10000 == 0)
@@ -67,43 +68,50 @@ public class FileDiscussionDao implements DiscussionDao {
             }
 
         }
+        } finally {
+            br.close();
+        }
     }
 
     private void loadJSONFile() throws IOException{
         BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(Config.JSON_DISCUSS_PATH), "GBK"));
         long preNdatetime = 0;
         int cnt = 0;
-        while (true){
-            String line = br.readLine();
-            if (cnt++ % 100 == 0)
-                System.out.println(cnt);
+        try{
+            while (true){
+                String line = br.readLine();
+                if (cnt++ % 100 == 0)
+                    System.out.println(cnt);
 
-            try {
-                if (line != null) {
-                    JSONObject json = new JSONObject(line);
-                    Discussion discussion = new Discussion(Integer.parseInt((String) json.get("ID")), Integer.parseInt((String) json.get("ParentID")),
-                            Integer.parseInt((String) json.get("TopicSortID")), Integer.parseInt((String) json.get("BoardId")),
-                            Common.decodeElin((String) json.get("Title")), Common.decodeElin((String)json.get("Content")),(String)json.get("ndatetime"));
-                    if (discussion.date < preNdatetime)
-                        continue;
-                    preNdatetime = discussion.date;
-                    if(discussion.topicId == 0)
-                        discussion.topicId = discussion.id;
-                    if (!map.containsKey(discussion.topicId))
-                        map.put(discussion.topicId, new ArrayList<Discussion>());
-                    map.get(discussion.topicId).add(discussion);
-                    discussion.author = Integer.parseInt((String) json.get("UserID"));
-                    discussion.readCount = Integer.parseInt((String) json.get("Hits"));
+                try {
+                    if (line != null) {
+                        JSONObject json = new JSONObject(line);
+                        Discussion discussion = new Discussion(Integer.parseInt((String) json.get("ID")), Integer.parseInt((String) json.get("ParentID")),
+                                Integer.parseInt((String) json.get("TopicSortID")), Integer.parseInt((String) json.get("BoardId")),
+                                Common.decodeElin((String) json.get("Title")), Common.decodeElin((String)json.get("Content")),(String)json.get("ndatetime"));
+                        if (discussion.date < preNdatetime)
+                            continue;
+                        preNdatetime = discussion.date;
+                        if(discussion.topicId == 0)
+                            discussion.topicId = discussion.id;
+                        if (!map.containsKey(discussion.topicId))
+                            map.put(discussion.topicId, new ArrayList<Discussion>());
+                        map.get(discussion.topicId).add(discussion);
+                        discussion.author = Integer.parseInt((String) json.get("UserID"));
+                        discussion.readCount = Integer.parseInt((String) json.get("Hits"));
+                    }
+                } catch (Exception e) {
+                    LOG.error(e);
+                    continue;
+                } finally {
+
+                    if (line == null)
+                        break;
                 }
-            } catch (Exception e) {
-                LOG.error(e);
-                continue;
-            } finally {
 
-                if (line == null)
-                    break;
             }
-
+        } finally {
+            br.close();
         }
 
     }
