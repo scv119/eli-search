@@ -184,7 +184,11 @@ a:focus{
   </div>
   <div class="choice dl">
     <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=1')" class="word dl<#if type==1> active </#if>">版块</a>
-    <p class="bg<#if type!=1> hide </#if>"></p> </div> <div class="choice dl"> <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=2')" class="word dl<#if type==2> active </#if>">用户</a> <p class="bg<#if type!=2> hide </#if>"></p> </div> </div>
+    <p class="bg<#if type!=1> hide </#if>"></p> </div> <div class="choice dl"> <a href="javascript:window.location.href=encodeURI('./q?q=${query}&type=2')" class="word dl<#if type==2> active </#if>">用户</a> <p class="bg<#if type!=2> hide </#if>"></p> </div> 
+	<div class="choice dl">
+    <a href="http://new.elimautism.org/Boards.asp" class="word dl">返回论坛</a>
+  </div>
+  </div>
 
 <div class="pos">
   <div class="search-wrap cf" >
@@ -203,7 +207,7 @@ a:focus{
     </form>
   </div>
   <#if type==0>
-  <div class="tip"><a href="http://www.sojump.com/jq/2615772.aspx">反馈意见</a></div>
+  <div class="tip"><a href="http://www.sojump.com/jq/2804170.aspx">反馈意见</a></div>
   </#if>
   <div id="adv-div">
         <div>

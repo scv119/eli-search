@@ -25,6 +25,7 @@ public class AdminAction extends BasicAction {
                 @Override
                 public void run() {
                     BuildIndex.start();
+                    System.exit(0);
                 }
             }).start();
         }
