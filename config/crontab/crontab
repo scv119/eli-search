@@ -1,0 +1,2 @@
+0 1 * * * curl localhost:7080/admin?reload=true > /dev/null
+*/10 * * * * curl localhost:7080/q?q=qq > /dev/null
